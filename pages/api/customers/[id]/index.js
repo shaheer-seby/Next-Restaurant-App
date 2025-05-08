@@ -25,6 +25,19 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage }).single('thumb');
 
 export default async function handler(req, res) {
+
+    // allow localhost:3001 for quick testing
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+    // Handle preflight request
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+
+    
   const { db } = await connectToDatabase();
   const id = req.query.id;
 
