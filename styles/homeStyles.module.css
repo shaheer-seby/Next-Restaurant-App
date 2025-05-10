@@ -1,0 +1,69 @@
+/* homeStyles.css */
+
+.headerContainer {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.headerText {
+  text-transform: uppercase;
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.titleText {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.separator {
+  width: 80px;
+  border-bottom: 3px solid #007bff;
+  margin: 1.5rem auto;
+}
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cardItem {
+  margin-bottom: 1.5rem;
+}
+
+.cardImage {
+  width: 100%;
+  object-fit: cover;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.cardDescription {
+  color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.readMoreBtn {
+  background-color: #007bff;
+  color: white;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+}
