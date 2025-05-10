@@ -47,7 +47,7 @@ const Categories = () => {
             {categories.map((item, idx) => (
               <div key={item._id || idx} className="col-md-3 col-sm-6 mb-4">
                 <Link
-                  href={`/category-food/${encodeURIComponent(item.title)}`}
+                  href={`/category/${encodeURIComponent(item.title)}`}
                   className="text-decoration-none"
                 >
                   <motion.div

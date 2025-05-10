@@ -1,40 +1,37 @@
+'use client';
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import ShoppingCart from './ShoppingCart';
-import { useCart } from 'react-use-cart';
+import Link from 'next/link';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Header = () => {
-  const { totalUniqueItems } = useCart();
   const [scrolled, setScrolled] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
-  const [openCart, setOpenCart] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
-  const cartRef = useRef();
   const profileRef = useRef();
   const [customer, setCustomer] = useState(null);
   const customerId = Cookies.get('customer');
+  const router = useRouter();
 
-  // Background toggle on scroll
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = e => {
-      if (cartRef.current && !cartRef.current.contains(e.target)) setOpenCart(false);
-      if (profileRef.current && !profileRef.current.contains(e.target)) setOpenProfile(false);
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setOpenProfile(false);
+      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch customer data
   useEffect(() => {
     if (customerId) {
       axios
@@ -47,7 +44,7 @@ const Header = () => {
   const logout = () => {
     Cookies.remove('customer');
     Cookies.remove('customerName');
-    window.location.href = '/';
+    router.push('/');
   };
 
   const linkColor = scrolled ? 'text-dark' : 'text-white';
@@ -61,7 +58,7 @@ const Header = () => {
       style={{ transition: 'background-color 0.3s' }}
     >
       <div className="container">
-        <Link className="navbar-brand" to="/">
+        <Link className="navbar-brand" href="/">
           <img src="/logo.png" height="40" alt="Logo" />
         </Link>
         <button
@@ -82,12 +79,12 @@ const Header = () => {
           id="navbarNav"
         >
           <ul className="navbar-nav me-auto">
-            {[ '/categories', '/foods', '/orders','/reservations', '/blogs', '/contact'].map(
+            {['/home/categories', '/food', '/order', '/reservations', '/blogs', '/contact'].map(
               (path, idx) => {
-                const labels = ['Categories', 'Food', 'Order','Book', 'Blogs', 'Contact'];
+                const labels = ['Categories', 'Food', 'Order', 'Book', 'Blogs', 'Contact'];
                 return (
                   <li className="nav-item" key={idx}>
-                    <Link className={`nav-link ${linkColor}`} to={path}>
+                    <Link className={`nav-link ${linkColor}`} href={path}>
                       {labels[idx]}
                     </Link>
                   </li>
@@ -97,32 +94,6 @@ const Header = () => {
           </ul>
 
           <ul className="navbar-nav align-items-center">
-            <li className="nav-item me-3 position-relative" ref={cartRef}>
-              <button
-                className="btn position-relative"
-                onClick={() => setOpenCart(o => !o)}
-              >
-                <i
-                  className="fa fa-shopping-cart fa-lg"
-                  style={{ filter: iconFilter }}
-                ></i>
-                {totalUniqueItems > 0 && (
-                  <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {totalUniqueItems}
-                  </span>
-                )}
-              </button>
-              {openCart && (
-                <div
-                  className="card p-3 dropdown-menu-end position-absolute"
-                  style={{ top: '100%', right: 0, minWidth: '600px', zIndex: 1000 }}
-                >
-                  <h6 className="mb-3">Shopping Cart</h6>
-                  <ShoppingCart />
-                </div>
-              )}
-            </li>
-
             <li className="nav-item position-relative" ref={profileRef}>
               <button className="btn" onClick={() => setOpenProfile(p => !p)}>
                 {customer?.thumb ? (
@@ -147,7 +118,7 @@ const Header = () => {
                   {customer ? (
                     <>
                       <li>
-                        <Link className="dropdown-item" to="/customer/dashboard">
+                        <Link className="dropdown-item" href="/customer/dashboard">
                           Dashboard
                         </Link>
                       </li>
@@ -159,7 +130,7 @@ const Header = () => {
                     </>
                   ) : (
                     <li>
-                      <Link className="dropdown-item" to="/login">
+                      <Link className="dropdown-item" href="/login">
                         Login
                       </Link>
                     </li>

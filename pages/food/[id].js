@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PageHeader from "../../styles/header/title/PageHeader";
 import "../../styles/food.module.css";
 import Link from "next/link";
-import { useCart } from "react-use-cart";
+// import { useCart } from "react-use-cart";
 import Swal from "sweetalert2";
 import Rating from "../../styles/rating/Rating";
 import moment from "moment";
@@ -121,17 +121,17 @@ const SingleFood = () => {
   };
 
   // ADD-TO-CART
-  const { addItem } = useCart();
-  const addItemHandlar = (item, id) => {
-    item.id = id;
-    addItem(item);
-    Swal.fire({
-      icon: "success",
-      title: item.title + " Added.",
-      showConfirmButton: false,
-      timer: 1000,
-    });
-  };
+  // const { addItem } = useCart();
+  // const addItemHandlar = (item, id) => {
+  //   item.id = id;
+  //   addItem(item);
+  //   Swal.fire({
+  //     icon: "success",
+  //     title: item.title + " Added.",
+  //     showConfirmButton: false,
+  //     timer: 1000,
+  //   });
+  // };
 
   // Show loading if no data is available yet
   if (router.isFallback) {
@@ -178,7 +178,7 @@ const SingleFood = () => {
                       <Link
                         className="btn-primary"
                         href={`/food/${food._id}`}
-                        onClick={() => addItemHandlar(food, food._id)}
+                        
                       >
                         <i className="fas fa-shopping-cart"></i> Add To Cart
                       </Link>
@@ -267,7 +267,7 @@ const SingleFood = () => {
                       <Link
                         href={`/food/${item._id}`}
                         className="btn-primary"
-                        onClick={() => addItemHandlar(item, item._id)}
+                      
                       >
                         <i className="fas fa-shopping-cart"></i> Add To Cart
                       </Link>
