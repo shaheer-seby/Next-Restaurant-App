@@ -14,6 +14,12 @@ const Home = () => {
         <h2 className="display-4 mb-4">Welcome to Our Website</h2>
         <p className="lead mb-4">Choose a page to explore:</p>
         <div className="d-flex justify-content-center mb-5">
+          <Link href="/auth" className="btn btn-primary mx-2 px-4 py-2">
+          Authenticate
+          </Link>
+          <Link href="/payment" className="btn btn-primary mx-2 px-4 py-2">
+          Pay
+          </Link>
           <Link href="/home/Hfood" className="btn btn-primary mx-2 px-4 py-2">
             Explore Food
           </Link>
