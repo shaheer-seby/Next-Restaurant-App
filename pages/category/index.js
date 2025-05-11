@@ -53,9 +53,7 @@ const Categories =  ({ categories= [] }) =>{
                         alt={cat.title}
                         className="card-img img-fluid"
                         style={{ objectFit: 'cover' }}
-                        onError={(e) => {
-                          e.target.src = '/fallback.jpg';
-                        }}
+                        
                       />
                     </div>
                     <div className="card-img-overlay d-flex align-items-end p-0">

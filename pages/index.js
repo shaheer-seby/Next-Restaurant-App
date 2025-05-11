@@ -1,9 +1,11 @@
 // pages/home.js
-import React from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
 import HeroBanner from "./home/HeroBanner";
 import Categories from "./category";
 import Blogs from "./blogs"
+import CartContext from "@/context/context";
+
 const Home = ({ categories, blogs }) => {
   return (
     <>

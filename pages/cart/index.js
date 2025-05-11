@@ -2,9 +2,9 @@ import { useContext } from 'react';
 import CartContext from '@/context/context';
 
 function CartPage() {
-  const { cartItems, addItem, deleteItem } = useContext(CartContext);
+  const cart= useContext(CartContext);
 
-  const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const total = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const dummyItems = [
     { id: 1, name: 'Wireless Headphones', price: 79.99 },
@@ -65,7 +65,7 @@ function CartPage() {
           ))}
         </div>
 
-        {cartItems.length === 0 ? (
+        {cart.cartItems.length === 0 ? (
           <p style={{ textAlign: 'center', color: '#6b7280', fontStyle: 'italic' }}>
             Your cart is empty. Start adding items! 🧃
           </p>
@@ -98,7 +98,7 @@ function CartPage() {
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <button
-                    onClick={() => deleteItem(item)}
+                    onClick={() => cart.deleteItem(item)}
                     style={{
                       width: '2.5rem',
                       height: '2.5rem',
@@ -115,7 +115,7 @@ function CartPage() {
                   </button>
                   <span style={{ fontSize: '1rem', fontWeight: '500' }}>{item.quantity}</span>
                   <button
-                    onClick={() => addItem(item)}
+                    onClick={() => cart.addItem(item)}
                     style={{
                       width: '2.5rem',
                       height: '2.5rem',

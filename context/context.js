@@ -4,11 +4,24 @@ const CartContext = createContext({
   cartItems: [],
   addItem: (item) => {},
   deleteItem: (item) => {},
+  userId: null,
+  address:null,
+  phone:null,
+  setUser: (id,add,pho) => {}
+  
 });
 
 export function CartContextProvider(props) {
   const [cart, setCart] = useState([]);
-
+  const [userId,setUserId] = useState();
+  const [address,setAddress] = useState();
+  const [phone,setPhone] = useState();
+  function set(id,add,pho)
+  {
+    setUserId(id);
+    setAddress(add);
+    setPhone(pho)
+  }
   function add(item) {
     setCart((prevCart) => {
       const existingItem = prevCart.find((i) => i.id === item.id);
@@ -41,6 +54,10 @@ export function CartContextProvider(props) {
     cartItems: cart,
     addItem: add,
     deleteItem: del,
+    setUser: set,
+    uid:userId,
+    address:address,
+    phone:phone
   };
 
   return (

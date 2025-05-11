@@ -2,7 +2,7 @@
   "name": "next-web-project",
   "version": "0.1.0",
   "private": true,
-  "type": "module", 
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,6 +17,7 @@
     "antd": "^5.24.9",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "bootstrap": "^5.3.5",
     "dotenv": "^16.5.0",
     "framer-motion": "^12.9.4",

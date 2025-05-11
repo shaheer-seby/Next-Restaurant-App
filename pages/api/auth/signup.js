@@ -1,21 +1,45 @@
 import { MongoClient } from "mongodb";
+import bcrypt from "bcryptjs";
 
 export default async function handler(req, res) {
-    if(req.method==='POST')
-    {
+  if (req.method === 'POST') {
+    const { email, password, name, address, phone } = req.body;
 
-    const data=req.body;
-    const email=data.email;
-    const pass=data.password;
-    
-    const client= await MongoClient.connect("mongodb+srv://hira:12345677@cluster0.k927h.mongodb.net/signup?retryWrites=true&w=majority&appName=Cluster0")
-    const db= client.db();
+    if (!email || !password || !name || !address || !phone) {
+      return res.status(200).json({ message: 'Missing required fields.' });
+    }
+
+    let client;
+
+    try {
+      client = await MongoClient.connect(process.env.MONGODB_URI);
+    } catch (error) {
+      return res.status(200).json({ message: 'Database connection failed.' });
+    }
+
+    const db = client.db();
+
+    const existingUser = await db.collection("users").findOne({ email });
+
+    if (existingUser) {
+      client.close();
+      return res.status(200).json({ message: 'User already exists.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12); // 12 salt rounds
 
     await db.collection("users").insertOne({
-        email:email,
-        password:pass
-    })
-    res.status(200).json({ message:"created user" });
+      email,
+      password: hashedPassword,
+      username: name,
+      phone,
+      address,
+      createdAt: new Date()
+    });
+
+    client.close();
+    return res.status(200).json({ message: "User created successfully." });
   }
+
+  res.status(200).json({ message: 'Method not allowed.' });
 }
-  
