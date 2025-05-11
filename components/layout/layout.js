@@ -1,19 +1,37 @@
-import NotificationContext from "@/store/notification-context"
-import Notification from "../notification/notification"
-import Header from "./main-header"
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import CartContext from "@/context/context";
+import CartPage from "../cart";
+import { ShoppingCart } from "lucide-react"; // Optional icon library
+import styles from "./layout.module.css"; // Custom CSS module
 
+export default function Layout(props) {
+  const ctx = useContext(CartContext);
+  const [showCart, setShowCart] = useState(false);
 
-export default function Layout(props){
-    const ctx=useContext(NotificationContext);
-    const value=ctx.notification;
-    return(
-        <>
-        <Header/>
-        <main>
-            {props.children}
-        </main>
-       { value && <Notification title={value.title} message={value.message} status={value.status}/>}
-        </>
-    )
+  const toggleCart = () => {
+    setShowCart((prev) => !prev);
+  };
+
+  return (
+    <>
+      <header className={styles.header}>
+        <button onClick={toggleCart} className={styles.cartButton}>
+          <ShoppingCart size={24} />
+          <span className={styles.count}>{ctx.cartItems.length}</span>
+        </button>
+      </header>
+
+      {showCart && (
+        <div className={styles.cartOverlay}>
+          <CartPage
+            cartItems={ctx.cartItems}
+            addItem={ctx.addItem}
+            deleteItem={ctx.deleteItem}
+          />
+        </div>
+      )}
+
+      <main>{props.children}</main>
+    </>
+  );
 }

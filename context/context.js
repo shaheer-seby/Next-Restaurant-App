@@ -23,6 +23,7 @@ export function CartContextProvider(props) {
     setPhone(pho)
   }
   function add(item) {
+    console.log(item)
     setCart((prevCart) => {
       const existingItem = prevCart.find((i) => i.id === item.id);
       if (existingItem) {
@@ -33,6 +34,7 @@ export function CartContextProvider(props) {
         return [...prevCart, { ...item, quantity: 1 }];
       }
     });
+console.log(cart)
   }
 
   function del(item) {

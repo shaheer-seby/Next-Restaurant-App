@@ -7,15 +7,19 @@ import "@/styles/homeStyles.module.css";
 import "@/styles/contact.css";
 import Header from "@/styles/header/Header";
 import { SessionProvider } from 'next-auth/react';
-
 import Footer from "@/styles/footer/Footer";
+import Layout from "@/components/layout/layout";
 export default function App({ Component, pageProps }) {
   return(
-<SessionProvider>
     <CartContextProvider>
+
+{/* <SessionProvider> */}
+<Layout>
             <Component {...pageProps} />
+</Layout>
+{/* </SessionProvider> */}
     </CartContextProvider>
-</SessionProvider>
+
   )
    
 }

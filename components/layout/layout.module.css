@@ -1,0 +1,38 @@
+.header {
+  display: flex;
+  justify-content: flex-end; /* ⬅ Aligns icon to the right */
+  padding: 10px;
+  background-color: '#ff0000';
+  position: relative;
+}
+
+.cartButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+color: black;
+}
+
+.count {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.cartOverlay {
+  position: absolute;
+  top: 50px;
+  right: 10px; /* ⬅ Aligns dropdown to right side */
+  background: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}

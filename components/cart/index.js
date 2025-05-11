@@ -1,11 +1,9 @@
 import { useContext } from 'react';
 import CartContext from '@/context/context';
 
-function CartPage() {
-  const cart= useContext(CartContext);
-  console.log('cart',cart.cartItems)
-  const total = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-
+function CartPage(props) {
+  const total = props.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const cart = useContext(CartContext);
   const dummyItems = [
     { id: 1, name: 'Wireless Headphones', price: 79.99 },
     { id: 2, name: 'Smart Watch', price: 129.99 },
@@ -15,7 +13,8 @@ function CartPage() {
   return (
     <div
       style={{
-        minHeight: '100vh',
+borderRadius:'20px',
+
         background: 'linear-gradient(to bottom right, #f0f4ff, #fefeff)',
         padding: '3rem 1rem',
         fontFamily: 'sans-serif',
@@ -27,7 +26,7 @@ function CartPage() {
           margin: '0 auto',
           backgroundColor: 'white',
           padding: '2rem',
-          borderRadius: '1.5rem',
+          borderRadius: '40px',
           boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
           border: '1px solid #e0e0e0',
         }}
@@ -44,34 +43,14 @@ function CartPage() {
           🛒 Your Cart
         </h1>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '2.5rem' }}>
-          {dummyItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => cart.addItem(item)}
-              style={{
-                backgroundColor: '#6366f1',
-                color: '#fff',
-                padding: '0.75rem',
-                borderRadius: '1rem',
-                fontWeight: '600',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
-              }}
-            >
-              ➕ Add {item.name}
-            </button>
-          ))}
-        </div>
 
-        {cart.cartItems.length === 0 ? (
+        {props.cartItems.length === 0 ? (
           <p style={{ textAlign: 'center', color: '#6b7280', fontStyle: 'italic' }}>
             Your cart is empty. Start adding items! 🧃
           </p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {cart.cartItems.map((item) => (
+            {props.cartItems.map((item) => (
               <div
                 key={item.id}
                 style={{
@@ -84,7 +63,7 @@ function CartPage() {
                   boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                 }}
               >
-                <div>
+                <div style={{marginRight:'20px'}}>
                   <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f2937' }}>
                     {item.name}
                   </h2>
@@ -139,7 +118,7 @@ function CartPage() {
         <div
           style={{
             marginTop: '3rem',
-            textAlign: 'right',
+            textAlign: 'center',
             padding: '1.5rem',
             backgroundColor: '#eef2ff',
             borderRadius: '1rem',

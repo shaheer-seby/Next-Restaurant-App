@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import PageHeader from "../../styles/header/title/PageHeader";
 import "../../styles/food.module.css";
 import Link from "next/link";
@@ -9,7 +9,7 @@ import moment from "moment";
 import ReactPaginate from "react-paginate";
 import Banner from "../../styles/banner/Banner";
 import { useRouter } from 'next/router';
-
+import CartContext from "@/context/context";
 const SingleFood = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -109,6 +109,7 @@ const SingleFood = () => {
   // PAGINATION
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
+  const cart= useContext(CartContext);
 
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = reviews.slice(itemOffset, endOffset);
@@ -179,13 +180,7 @@ const SingleFood = () => {
                   </li>
                   <li>
                     {food.active === "on" ? (
-                      <Link
-                        className="btn-primary"
-                        href={`/food/${food._id}`}
-                        
-                      >
-                        <i className="fas fa-shopping-cart"></i> Add To Cart
-                      </Link>
+                     null
                     ) : (
                       <Link href="#" className="btn-primary disableLink">
                         <i className="fas fa-shopping-cart"></i> Out Of Stock
@@ -193,6 +188,9 @@ const SingleFood = () => {
                     )}
                   </li>
                 </ul>
+ <button onClick={()=>{cart.addItem({id:1,name: 'hi',price: 1000})}}>
+                         Add To Cart
+                      </button>
               </div>
             </div>
           </div>
