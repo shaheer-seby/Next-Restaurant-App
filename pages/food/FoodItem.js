@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link"; 
-import { useCart } from "react-use-cart";
+// import { useCart } from "react-use-cart";
 
 import Rating from "../../styles/rating/Rating";
 import ReactPaginate from "react-paginate";
@@ -28,17 +28,17 @@ const FoodItem = ({ foods }) => {
   };
 
   // ADD-TO-CART
-  const { addItem } = useCart();
-  const addItemHandler = (item, id) => {
-    item.id = id;
-    addItem(item);
-    Swal.fire({
-      icon: "success",
-      text: item.title + " Added.",
-      showConfirmButton: false,
-      timer: 1000,
-    });
-  };
+  // const { addItem } = useCart();
+  // const addItemHandler = (item, id) => {
+  //   item.id = id;
+  //   addItem(item);
+  //   Swal.fire({
+  //     icon: "success",
+  //     text: item.title + " Added.",
+  //     showConfirmButton: false,
+  //     timer: 1000,
+  //   });
+  // };
 
   return (
     <>
@@ -76,7 +76,7 @@ const FoodItem = ({ foods }) => {
                   {item.active === "on" ? (
                     <button
                       className="btn-primary"
-                      onClick={() => addItemHandler(item, item._id)}
+                   
                     >
                       <i className="fas fa-shopping-cart"></i> Add To Cart
                     </button>

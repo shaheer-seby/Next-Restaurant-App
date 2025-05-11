@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
+// components/Footer.tsx
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Footer = () => {
   const [showTopBtn, setShowTopBtn] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setShowTopBtn(window.scrollY > 200);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const scrollToTop = () =>
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
     <>
@@ -24,7 +26,7 @@ const Footer = () => {
               <img
                 src="/logo.png"
                 alt="Bistro Noir"
-                style={{ width: 80, height: 80, objectFit: "contain" }}
+                style={{ width: 80, height: 80, objectFit: 'contain' }}
                 className="mb-3"
               />
               <p className="small mb-0">
@@ -32,13 +34,11 @@ const Footer = () => {
                 fine-dining experience inspired by classic French bistros.
               </p>
               <div className="mt-3">
-                {["facebook-f", "instagram", "twitter", "linkedin-in"].map(icon => (
-                  <Link 
-                    key={icon} 
-                    to="#" 
-                    className="text-light fs-5 me-3"
-                  >
-                    <i className={`fab fa-${icon}`}></i>
+                {['facebook-f', 'instagram', 'twitter', 'linkedin-in'].map((icon) => (
+                  <Link key={icon} href="#" passHref>
+                    <span className="text-light fs-5 me-3">
+                      <i className={`fab fa-${icon}`}></i>
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -48,19 +48,17 @@ const Footer = () => {
             <div className="d-flex flex-column flex-fill mb-4 mb-md-0 me-md-4">
               <h5 className="text-warning mb-3">Explore</h5>
               {[
-                { to: "/", label: "Home" },
-                { to: "/categories", label: "Categories" },
-                { to: "/foods", label: "Food" },
-                { to: "/orders", label: "Order" },
-                { to: "/blogs", label: "Blog" },
-                { to: "/contact", label: "Contact" },
-              ].map(({ to, label }) => (
-                <Link
-                  key={to}
-                  to={to}
-                  className="small text-light text-decoration-none mb-2 d-block"
-                >
-                  {label}
+                { href: '/', label: 'Home' },
+                { href: '/categories', label: 'Categories' },
+                { href: '/foods', label: 'Food' },
+                { href: '/orders', label: 'Order' },
+                { href: '/blogs', label: 'Blog' },
+                { href: '/contact', label: 'Contact' },
+              ].map(({ href, label }) => (
+                <Link key={href} href={href} passHref>
+                  <span className="small text-light text-decoration-none mb-2 d-block">
+                    {label}
+                  </span>
                 </Link>
               ))}
             </div>
