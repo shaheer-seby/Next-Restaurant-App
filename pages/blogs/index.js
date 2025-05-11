@@ -4,44 +4,16 @@ import moment from 'moment';
 import ReactPaginate from 'react-paginate';
 import Banner from '../../styles/banner/Banner';
 
-const Blog = () => {
-  const mockBlogs = [
-    {
-      _id: '1',
-      title: 'Understanding React Basics',
-      description: 'This blog explains the fundamentals of React including components, props, and state.',
-      post_by: 'Admin',
-      date: new Date(),
-      thumb: 'https://via.placeholder.com/300x200',
-    },
-    {
-      _id: '2',
-      title: 'Next.js for Beginners',
-      description: 'Learn how to get started with Next.js, the popular React framework.',
-      post_by: 'Jane Doe',
-      date: new Date(),
-      thumb: 'https://via.placeholder.com/300x200',
-    },
-    {
-      _id: '3',
-      title: 'Styling in React: Tailwind vs CSS Modules',
-      description: 'We compare Tailwind CSS with CSS Modules to help you choose the right styling approach.',
-      post_by: 'John Smith',
-      date: new Date(),
-      thumb: 'https://via.placeholder.com/300x200',
-    },
-    // Add more mock items if needed...
-  ];
-
+const Blog = ({ blogs = [] }) => {
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 6;
 
   const endOffset = itemOffset + itemsPerPage;
-  const currentItems = mockBlogs.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(mockBlogs.length / itemsPerPage);
+  const currentItems = blogs.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(blogs.length / itemsPerPage);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % mockBlogs.length;
+    const newOffset = (event.selected * itemsPerPage) % blogs.length;
     setItemOffset(newOffset);
 
     if (typeof window !== 'undefined') {
@@ -61,13 +33,20 @@ const Blog = () => {
               currentItems.map((item) => (
                 <div className="items shadow" key={item._id}>
                   <div className="img">
-                    <img src={item.thumb} alt={item.title} />
+                    <img
+                      src={
+                        item.thumb.startsWith('http')
+                          ? item.thumb
+                          : `/blogs/${item.thumb}`
+                      }
+                      alt={item.title}
+                    />
                   </div>
                   <div className="text">
                     <div className="admin flexSB">
                       <span>
                         <i className="fa fa-user"></i>
-                        <label>{item.post_by}</label>
+                        <label>{item.post_by || 'Admin'}</label>
                       </span>
                       <span>
                         <i className="fa fa-calendar-alt"></i>
@@ -89,7 +68,7 @@ const Blog = () => {
             )}
           </div>
 
-          {mockBlogs.length > itemsPerPage && (
+          {blogs.length > itemsPerPage && (
             <div className="mt-4 d-flex justify-content-center">
               <ReactPaginate
                 breakLabel="..."
@@ -112,5 +91,23 @@ const Blog = () => {
     </>
   );
 };
+
+export async function getServerSideProps() {
+  try {
+    const res = await fetch('http://localhost:3000/api/blogs');
+    const data = await res.json();
+
+    const blogs = Array.isArray(data) ? data : [];
+
+    return {
+      props: { blogs },
+    };
+  } catch (error) {
+    console.error('Failed to fetch blogs:', error);
+    return {
+      props: { blogs: [] },
+    };
+  }
+}
 
 export default Blog;
