@@ -1,11 +1,10 @@
 // pages/home.js
 import React from "react";
 import Link from "next/link";
-import HBlog from "./blogs";
-import HCategories from "./categories";
+import Category from "../category";
 import HFood from "./Hfood";
 import HeroBanner from "./HeroBanner";
-
+import Blog from "../blogs";
 const Home = () => {
   return (
     <>
@@ -23,18 +22,17 @@ const Home = () => {
           <Link href="/home/Hfood" className="btn btn-primary mx-2 px-4 py-2">
             Explore Food
           </Link>
-          <Link href="/home/categories" className="btn btn-primary mx-2 px-4 py-2">
+          <Link href="/category" className="btn btn-primary mx-2 px-4 py-2">
             Explore Categories
           </Link>
-          <Link href="/home/blogs" className="btn btn-primary mx-2 px-4 py-2">
+          <Link href="/blogs" className="btn btn-primary mx-2 px-4 py-2">
             Explore Blogs
           </Link>
         </div>
       </div>
 
-      <HCategories />
-      <HFood />
-      <HBlog />
+      <Category />
+      <Blog />
     </>
   );
 };

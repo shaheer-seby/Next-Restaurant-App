@@ -63,6 +63,7 @@ export default async function handler(req, res) {
       }
       res.status(200).json(blogs);
     } catch (error) {
+
       res.status(500).json({ message: "An error occurred fetching blogs.", error: error.message });
     }
   } else {

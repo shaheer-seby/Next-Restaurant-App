@@ -9,6 +9,7 @@ const Blog = ({ blogs = [] }) => {
   const itemsPerPage = 6;
 
   const endOffset = itemOffset + itemsPerPage;
+  console.log(blogs)
   const currentItems = blogs.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(blogs.length / itemsPerPage);
 
@@ -98,7 +99,6 @@ export async function getServerSideProps() {
     const data = await res.json();
 
     const blogs = Array.isArray(data) ? data : [];
-
     return {
       props: { blogs },
     };

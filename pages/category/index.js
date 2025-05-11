@@ -1,14 +1,21 @@
-import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import path from 'path';
+import { Cat } from 'lucide-react';
+import React, { useState } from 'react';
+
 
 const cardVariants = {
   hover: { scale: 1.03, boxShadow: '0 6px 18px rgba(0,0,0,0.15)' }
 };
 
-const Categories = ({ categories }) => {
+const Categories =  ({ categories= [] }) =>{
+  const [itemOffset, setItemOffset] = useState(0);
+  const itemsPerPage = 6;
+
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = categories.slice(itemOffset, endOffset);
   return (
     <section className="py-5">
       <div className="container">
@@ -28,11 +35,11 @@ const Categories = ({ categories }) => {
           />
         </motion.div>
 
-        {categories.length === 0 ? (
+        {currentItems.length === 0 ? (
           <h4 className="text-center mt-4">No categories found.</h4>
         ) : (
           <div className="row">
-            {categories.map((cat) => (
+            {currentItems.map((cat) => (
               <div key={cat._id} className="col-md-3 col-sm-6 mb-4">
                 <Link href={`/category/${cat.title}`} className="text-decoration-none">
                   <motion.div
@@ -46,9 +53,6 @@ const Categories = ({ categories }) => {
                         alt={cat.title}
                         className="card-img img-fluid"
                         style={{ objectFit: 'cover' }}
-                        onError={(e) => {
-                          e.target.src = '/fallback.jpg';
-                        }}
                       />
                     </div>
                     <div className="card-img-overlay d-flex align-items-end p-0">
@@ -67,13 +71,12 @@ const Categories = ({ categories }) => {
   );
 };
 
-export default Categories;
-
 // ✅ Get data from your API route
 
 
-export async function getStaticProps() {
- 
+export async function getServerSideProps() {
+   console.log('YOOOOOOOOOOOOOOOo')
+
   const res = await fetch(`http://localhost:3000/api/categories`);
   
   if (!res.ok) {
@@ -88,12 +91,12 @@ export async function getStaticProps() {
     title: cat.title || 'Untitled',
     thumb: cat.thumb || 'default.jpg',
   }));
-
   return {
     props: {
       categories,
     },
-    revalidate: 60,
   };
 }
+
+export default Categories;
 
