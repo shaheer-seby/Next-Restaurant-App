@@ -24,7 +24,6 @@ export default async function handler(req, res) {
   const { db } = await connectToDatabase();
   const { id } = req.query;
 
-
     // allow localhost:3001 for quick testing
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');

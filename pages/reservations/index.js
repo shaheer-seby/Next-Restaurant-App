@@ -21,28 +21,52 @@ const Reservations = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Mock submission logic
-    console.log("Mock reservation data submitted:", reservation);
+  try {
+    const response = await fetch('/api/reservations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: reservation.name,
+        email: reservation.email,
+        phone: reservation.phone,
+        date: reservation.date,
+        time: reservation.time,
+        guests: reservation.people, // ✅ rename to match backend
+        notes: '', // Optional, or add notes field to form
+      }),
+    });
 
+    if (response.ok) {
+      Swal.fire({
+        icon: "success",
+        title: "Reservation Successful",
+        text: "Your reservation has been made successfully!",
+      });
+
+      setReservation({
+        name: "",
+        email: "",
+        phone: "",
+        date: "",
+        time: "",
+        people: 1,
+      });
+    } else {
+      const data = await response.json();
+      throw new Error(data.message || 'Something went wrong');
+    }
+  } catch (error) {
     Swal.fire({
-      icon: "success",
-      title: "Reservation Successful",
-      text: "Your reservation has been made successfully!",
+      icon: "error",
+      title: "Error",
+      text: error.message,
     });
+  }
+};
 
-    // Clear form
-    setReservation({
-      name: "",
-      email: "",
-      phone: "",
-      date: "",
-      time: "",
-      people: 1,
-    });
-  };
 
   return (
     <>
