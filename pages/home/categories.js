@@ -1,21 +1,14 @@
+import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import path from 'path';
-import { Cat } from 'lucide-react';
-import React, { useState } from 'react';
-
 
 const cardVariants = {
   hover: { scale: 1.03, boxShadow: '0 6px 18px rgba(0,0,0,0.15)' }
 };
 
-const Categories =  ({ categories= [] }) =>{
-  const [itemOffset, setItemOffset] = useState(0);
-  const itemsPerPage = 6;
-
-  const endOffset = itemOffset + itemsPerPage;
-  const currentItems = categories.slice(itemOffset, endOffset);
+const Categories = ({ categories }) => {
   return (
     <section className="py-5">
       <div className="container">
@@ -35,14 +28,13 @@ const Categories =  ({ categories= [] }) =>{
           />
         </motion.div>
 
-        {currentItems.length === 0 ? (
+        {categories.length === 0 ? (
           <h4 className="text-center mt-4">No categories found.</h4>
         ) : (
           <div className="row">
-            {currentItems.map((cat) => (
+            {categories.map((cat) => (
               <div key={cat._id} className="col-md-3 col-sm-6 mb-4">
-              <Link href={`/category/${encodeURIComponent(cat.title)}`} className="text-decoration-none">
-
+                <Link href={`/category/${cat.title}`} className="text-decoration-none">
                   <motion.div
                     className="card h-100 border-0 overflow-hidden"
                     whileHover="hover"
@@ -75,17 +67,18 @@ const Categories =  ({ categories= [] }) =>{
   );
 };
 
+export default Categories;
+
 // ✅ Get data from your API route
 
 
-export async function getServerSideProps() {
-   console.log('YOOOOOOOOOOOOOOOo')
-
+export async function getStaticProps() {
+ 
   const res = await fetch(`http://localhost:3000/api/categories`);
   
   if (!res.ok) {
     console.error('Failed to fetch categories:', await res.text());
-    return { props: { categories: [] } };
+    return { props: { categories: [] }, revalidate: 60 };
   }
 
   const data = await res.json();
@@ -95,12 +88,12 @@ export async function getServerSideProps() {
     title: cat.title || 'Untitled',
     thumb: cat.thumb || 'default.jpg',
   }));
+
   return {
     props: {
       categories,
     },
+  
   };
 }
-
-export default Categories;
 

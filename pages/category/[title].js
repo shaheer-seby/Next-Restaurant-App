@@ -1,7 +1,6 @@
+// pages/category/[title].js
+
 import React from 'react';
-import mongoose from 'mongoose';
-import Category from '@/models/category.model.js';
-import Item from '@/models/categoryitem.model.js';
 
 const CategoryDetailPage = ({ category, items }) => {
   if (!category) return <h2 className="text-center py-5">Category not found</h2>;
@@ -33,24 +32,20 @@ const CategoryDetailPage = ({ category, items }) => {
 };
 
 export async function getServerSideProps(context) {
-  const slug = context.params.slug;
+  const { title } = context.params;
 
-  await mongoose.connect(process.env.MONGODB_URI, {
-    dbName: 'restaurantDB',
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories/${title}`);
 
-  const category = await Category.findOne({ slug });
-
-  if (!category) {
+  if (!res.ok) {
     return { props: { category: null, items: [] } };
   }
 
-  const items = await Item.find({ categoryId: category._id }).lean();
+  const data = await res.json();
 
   return {
     props: {
-      category: JSON.parse(JSON.stringify(category)),
-      items: JSON.parse(JSON.stringify(items)),
+      category: data.category || null,
+      items: data.items || [],
     },
   };
 }
