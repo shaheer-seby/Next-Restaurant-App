@@ -1,4 +1,4 @@
-'use client'; // Marking it as a client component
+'use client';
 
 import React, { useEffect, useState } from "react";
 import PageHeader from "../../styles/header/title/PageHeader";
@@ -9,35 +9,25 @@ import Banner from "../../styles/banner/Banner";
 const Food = () => {
   const [query, setQuery] = useState("");
   const [foods, setFoods] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // useEffect to fetch data (currently using mock data)
   useEffect(() => {
-    const dummyData = [
-      {
-        _id: "1",
-        title: "Spicy Chicken Biryani",
-        description: "Delicious spicy rice with tender chicken pieces.",
-        price: 350,
-        rating: 4.5,
-        totalReviews: 20,
-        thumb: "biryani.jpg",
-        active: "on",
-      },
-      {
-        _id: "2",
-        title: "Paneer Tikka",
-        description: "Grilled paneer cubes with aromatic spices.",
-        price: 250,
-        rating: 4.2,
-        totalReviews: 15,
-        thumb: "paneer.jpg",
-        active: "on",
-      },
-    ];
+    const fetchFoods = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`/api/item?q=${encodeURIComponent(query)}`);
+        if (!res.ok) throw new Error("Failed to fetch foods");
+        const data = await res.json();
+        setFoods(data);
+      } catch (error) {
+        console.error("Error fetching food items:", error);
+        setFoods([]);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    setFoods(dummyData.filter(item =>
-      item.title.toLowerCase().includes(query.toLowerCase())
-    ));
+    fetchFoods();
   }, [query]);
 
   return (
@@ -58,7 +48,11 @@ const Food = () => {
           </div>
         </div>
         <div className="container">
-          <FoodItem foods={foods} />
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <FoodItem foods={foods} />
+          )}
         </div>
       </section>
     </>

@@ -90,16 +90,20 @@ const SingleFood = () => {
   const [recomFoods, setRecomFoods] = useState(mockRecomFoods);
 
   useEffect(() => {
-    if (id) {
-      // Update the ID when it's available from router
-      setFood({
-        ...mockFood,
-        _id: id
-      });
-      // Set reviews
-      const updatedFood = {...mockFood, _id: id};
-      setReviews(updatedFood.reviews.reverse());
+  if (id) {
+  const fetchFood = async () => {
+    try {
+      const res = await fetch(`/api/foods/${id}`);
+      const data = await res.json();
+      setFood(data);
+      setReviews((data.reviews || []).reverse());
+    } catch (error) {
+      console.error("Error fetching food:", error);
     }
+  };
+  fetchFood();
+}
+
   }, [id]);
 
   // PAGINATION
