@@ -1,73 +1,33 @@
+// models/categoryitem.model.js (unified model for foods)
 import mongoose from "mongoose";
 
 const reviewSchema = mongoose.Schema({
-  name: {
-    type: String,
-    require: true,
-  },
-  rating: {
-    type: Number,
-    require: true,
-  },
-  comment: {
-    type: String,
-    require: true,
-  },
+  name: { type: String, required: true },
+  rating: { type: Number, required: true },
+  comment: { type: String, required: true },
   customer: {
-    type: mongoose.Schema.Types.ObjectID,
-    require: true,
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
     ref: "Customers",
   },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+  date: { type: Date, default: Date.now },
 });
 
-const foodSchema = mongoose.Schema({
-  title: {
-    type: String,
-    require: true,
-  },
-  thumb: {
-    type: String,
-  },
-  price: {
-    type: Number,
-    require: true,
-  },
-  description: {
-    type: String,
-    require: true,
-  },
-  category: {
-    type: String,
-    require: true,
-  },
-  featured: {
-    type: String,
-    default: "off",
-  },
-  active: {
-    type: String,
-    default: "off",
-  },
+const itemSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  image: { type: String }, // Optional: Can also be called "thumb"
+  price: { type: Number, required: true },
+  categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Categories", required: true },
+  type: { type: String, enum: ["savoury", "dessert"], required: true },
+  featured: { type: String, default: "off" },
+  active: { type: String, default: "off" },
   reviews: [reviewSchema],
-  rating: {
-    type: Number,
-    require: true,
-    default: 0,
-  },
-  totalReviews: {
-    type: Number,
-    require: true,
-    default: 0,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
+  rating: { type: Number, default: 0 },
+  totalReviews: { type: Number, default: 0 },
+  date: { type: Date, default: Date.now },
 });
 
-const Foods = mongoose.model("Foods", foodSchema);
-export default Foods;
+// Reuse schema but store in "foods" collection
+const Item = mongoose.models.Item || mongoose.model("foodItems", itemSchema, "foods");
+export default Item;

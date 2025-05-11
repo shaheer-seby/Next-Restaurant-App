@@ -1,10 +1,14 @@
 import React from 'react';
-import mongoose from 'mongoose';
-import Category from '@/models/category.model.js';
-import Item from '@/models/categoryitem.model.js';
+import { useRouter } from 'next/router';
 
 const CategoryDetailPage = ({ category, items }) => {
+  const router = useRouter();
+
   if (!category) return <h2 className="text-center py-5">Category not found</h2>;
+
+  const handleClick = (id) => {
+    router.push(`/food/${id}`);
+  };
 
   return (
     <div className="container py-5">
@@ -12,7 +16,11 @@ const CategoryDetailPage = ({ category, items }) => {
       <div className="row">
         {items.map(item => (
           <div key={item._id} className="col-md-4 mb-4">
-            <div className="card h-100 shadow-sm">
+            <div
+              className="card h-100 shadow-sm"
+              onClick={() => handleClick(item._id)}
+              style={{ cursor: 'pointer' }}
+            >
               <img
                 src={item.image}
                 className="card-img-top"
@@ -33,24 +41,20 @@ const CategoryDetailPage = ({ category, items }) => {
 };
 
 export async function getServerSideProps(context) {
-  const slug = context.params.slug;
+  const { title } = context.params;
 
-  await mongoose.connect(process.env.MONGODB_URI, {
-    dbName: 'restaurantDB',
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories/${title}`);
 
-  const category = await Category.findOne({ slug });
-
-  if (!category) {
+  if (!res.ok) {
     return { props: { category: null, items: [] } };
   }
 
-  const items = await Item.find({ categoryId: category._id }).lean();
+  const data = await res.json();
 
   return {
     props: {
-      category: JSON.parse(JSON.stringify(category)),
-      items: JSON.parse(JSON.stringify(items)),
+      category: data.category || null,
+      items: data.items || [],
     },
   };
 }

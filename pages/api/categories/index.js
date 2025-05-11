@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../../../lib/db';
+import { connectToDatabase } from '@/lib/db';
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
