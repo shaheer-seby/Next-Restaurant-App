@@ -72,7 +72,7 @@ export default async function handler(req, res) {
           updateData.thumb = req.file.filename;
         }
 
-        const result = await db.collection('categories').updateOne(
+        const result = await db.collection('items').updateOne(
           { _id: new ObjectId(id) },
           { $set: updateData }
         );
@@ -89,7 +89,7 @@ export default async function handler(req, res) {
   } else if (req.method === 'DELETE') {
     // Delete category
     try {
-      const category = await db.collection('categories').findOne({ _id: new ObjectId(id) });
+      const category = await db.collection('items').findOne({ _id: new ObjectId(id) });
       if (!category) {
         return res.status(404).json({ message: 'Category not found' });
       }
@@ -100,7 +100,7 @@ export default async function handler(req, res) {
         fs.unlinkSync(thumbPath);
       }
 
-      await db.collection('categories').deleteOne({ _id: new ObjectId(id) });
+      await db.collection('items').deleteOne({ _id: new ObjectId(id) });
       res.status(200).json({ message: 'Category deleted successfully' });
     } catch (error) {
       res.status(500).json({ message: 'Error deleting category', error: error.message });

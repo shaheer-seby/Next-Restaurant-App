@@ -6,35 +6,41 @@ import Banner from '../../styles/banner/Banner'; // Adjust path if needed
 const SingleBlog = () => {
   const { query } = useRouter();
   const { id } = query;
-  const [blog, setBlog] = useState({});
+
+  const [blog, setBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // Mock data instead of fetching from backend
-    const mockData = {
-      title: 'React Design Patterns: Best Practices',
-      post_by: 'John Doe',
-      date: '2024-12-01',
-      description: `
-        React is a powerful JavaScript library for building user interfaces. 
-        In this article, we explore several common design patterns including 
-        container/presenter components, higher-order components (HOCs), render props, 
-        and hooks — each helping improve code reusability, readability, and maintainability.
+    if (!id) return;
 
-        Additionally, we'll look at how to effectively structure your project, 
-        organize components, and manage global state using Context API and third-party tools like Redux and Zustand.
-      `,
-      thumb: 'urlreact.png', // Place a placeholder image in /public/blogs/urlreact.png
+    const fetchBlog = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/blogs/${id}`);
+        if (!res.ok) {
+          throw new Error('Blog not found or error fetching blog');
+        }
+        const data = await res.json();
+        setBlog(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
-    setBlog(mockData);
+
+    fetchBlog();
   }, [id]);
+
+  if (loading) return <div className="text-center py-5">Loading blog...</div>;
+  if (error) return <div className="text-center py-5 text-danger">Error: {error}</div>;
 
   return (
     <>
-      <Banner title={blog.post_by} subtitle={blog.title} />
+      <Banner title={blog.post_by || 'Blog'} subtitle={blog.title} />
 
       <section className="py-5 bg-light">
         <div className="container">
-          {/* Blog Header Section */}
           <div className="row align-items-center mb-5">
             <div className="col-md-8">
               <h2 className="fw-bold mb-3">{blog.title}</h2>
@@ -59,7 +65,6 @@ const SingleBlog = () => {
             </div>
           </div>
 
-          {/* Blog Content */}
           <div className="bg-white p-4 rounded shadow-sm">
             <p className="fs-6 lh-lg" style={{ whiteSpace: 'pre-line' }}>
               {blog.description}
