@@ -15,7 +15,7 @@ const Food = () => {
     const fetchFoods = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/item?q=${encodeURIComponent(query)}`);
+        const res = await fetch(`/api/foods`);
         if (!res.ok) throw new Error("Failed to fetch foods");
         const data = await res.json();
         setFoods(data);

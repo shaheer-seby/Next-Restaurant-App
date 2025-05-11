@@ -8,7 +8,7 @@ import Blog from "../blogs";
 const Home = () => {
   return (
     <>
-      <HeroBanner />
+      {/* <HeroBanner /> */}
       <div className="container text-center my-5">
         <h2 className="display-4 mb-4">Welcome to Our Website</h2>
         <p className="lead mb-4">Choose a page to explore:</p>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import PageHeader from "../../styles/header/title/PageHeader";
 import "../../styles/food.module.css";
 import Link from "next/link";
-// import { useCart } from "react-use-cart";
 import Swal from "sweetalert2";
 import Rating from "../../styles/rating/Rating";
 import moment from "moment";
@@ -14,9 +13,8 @@ const SingleFood = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  // MOCK FOOD DATA
   const mockFood = {
-    _id: "1", // Default ID if router.query.id is not available yet
+    _id: "1",
     title: "Cheese Burst Pizza",
     description: "A cheesy delight with crispy crust and flavorful toppings.",
     price: 499,
@@ -84,29 +82,26 @@ const SingleFood = () => {
     },
   ];
 
-  // USE STATES
-  const [food, setFood] = useState(mockFood); // Initialize with default values
+  const [food, setFood] = useState(mockFood);
   const [reviews, setReviews] = useState([]);
   const [recomFoods, setRecomFoods] = useState(mockRecomFoods);
 
   useEffect(() => {
-  if (id) {
-  const fetchFood = async () => {
-    try {
-      const res = await fetch(`/api/foods/${id}`);
-      const data = await res.json();
-      setFood(data);
-      setReviews((data.reviews || []).reverse());
-    } catch (error) {
-      console.error("Error fetching food:", error);
+    if (id) {
+      const fetchFood = async () => {
+        try {
+          const res = await fetch(`/api/foods/${id}`);
+          const data = await res.json();
+          setFood(data);
+          setReviews((data.reviews || []).reverse());
+        } catch (error) {
+          console.error("Error fetching food:", error);
+        }
+      };
+      fetchFood();
     }
-  };
-  fetchFood();
-}
-
   }, [id]);
 
-  // PAGINATION
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
 
@@ -124,107 +119,66 @@ const SingleFood = () => {
     });
   };
 
-  // ADD-TO-CART
-  // const { addItem } = useCart();
-  // const addItemHandlar = (item, id) => {
-  //   item.id = id;
-  //   addItem(item);
-  //   Swal.fire({
-  //     icon: "success",
-  //     title: item.title + " Added.",
-  //     showConfirmButton: false,
-  //     timer: 1000,
-  //   });
-  // };
-
-  // Show loading if no data is available yet
   if (router.isFallback) {
-    return <div>Loading...</div>;
+    return <div className="text-center py-10">Loading...</div>;
   }
 
   return (
     <>
       <Banner title={food.category} subtitle={food.title} />
-      <section className="food single-food">
-        <div className="container">
-          <div className="single-food-item grid-2">
-            <div className="left">
-              <img src={"/foods/" + food.thumb} alt={food.title} />
+      <section className="food single-food py-10">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row gap-10 items-start mb-10">
+            <div className="w-full md:w-1/2">
+              <img
+                src={`/foods/${food.thumb}`}
+                alt={food.title}
+                className="w-full rounded-xl shadow-lg object-cover"
+              />
             </div>
-            <div className="right">
-              <h3>{food.title}</h3>
-              <p>{food.description}</p>
-              <div className="single-order-form">
-                <ul>
-                  <li>
-                    <span>Price</span>
-                    <h4>Rs {food.price}</h4>
-                  </li>
-                  <li>
-                    <span>Category</span>
-                    <h4>{food.category}</h4>
-                  </li>
-                  <li>
-                    <span>Reviews</span>
-                    <h4>
-                      <Rating rating={food.rating} />
-                      <span>({food.totalReviews})</span>
-                    </h4>
-                  </li>
-                  <li>
-                    <span>Status</span>
-                    <h4>
-                      {food.active === "on" ? "Available" : "Unavailable"}
-                    </h4>
-                  </li>
-                  <li>
-                    {food.active === "on" ? (
-                      <Link
-                        className="btn-primary"
-                        href={`/food/${food._id}`}
-                        
-                      >
-                        <i className="fas fa-shopping-cart"></i> Add To Cart
-                      </Link>
-                    ) : (
-                      <Link href="#" className="btn-primary disableLink">
-                        <i className="fas fa-shopping-cart"></i> Out Of Stock
-                      </Link>
-                    )}
-                  </li>
-                </ul>
+            <div className="w-full md:w-1/2 space-y-4">
+              <h2 className="text-3xl font-bold text-gray-800">{food.title}</h2>
+              <p className="text-gray-600">{food.description}</p>
+              <ul className="space-y-2">
+                <li><span className="font-semibold">Price:</span> Rs {food.price}</li>
+                <li><span className="font-semibold">Category:</span> {food.category}</li>
+                <li><span className="font-semibold">Rating:</span> <Rating rating={food.rating} /> ({food.totalReviews})</li>
+                <li><span className="font-semibold">Status:</span> {food.active === "on" ? "Available" : "Unavailable"}</li>
+              </ul>
+              <div>
+                {food.active === "on" ? (
+                  <Link href={`/food/${food._id}`} className="inline-block px-6 py-2 bg-green-600 text-white rounded-xl shadow hover:bg-green-700">
+                    <i className="fas fa-shopping-cart"></i> Add To Cart
+                  </Link>
+                ) : (
+                  <span className="inline-block px-6 py-2 bg-gray-400 text-white rounded-xl cursor-not-allowed">
+                    <i className="fas fa-shopping-cart"></i> Out Of Stock
+                  </span>
+                )}
               </div>
             </div>
           </div>
 
-          <div className="single-food-item">
-            <div className="all-review">
-              <h3 className="text-center" style={{ marginBottom: "20px" }}>
-                REVIEWS
-              </h3>
-              <div className="grid-4">
-                {reviews.length === 0 ? (
-                  <div className="review-item">
-                    <p>No feedback has been given yet.</p>
-                  </div>
-                ) : (
-                  currentItems.map((item, index) => (
-                    <div key={index} className="review-item">
-                      <div className="grid-2">
-                        <h5 className="name bold">{item.name}</h5>
-                        <Rating rating={item.rating} />
-                      </div>
-                      <p className="date">
-                        {item.date && moment(item.date).format("lll")}
-                      </p>
-                      <p className="content">
-                        {item.comment ? item.comment : "No comment given..."}
-                      </p>
+          <div className="mb-10">
+            <h3 className="text-2xl font-bold mb-4 text-center">Reviews</h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {reviews.length === 0 ? (
+                <p>No feedback has been given yet.</p>
+              ) : (
+                currentItems.map((item, index) => (
+                  <div key={index} className="p-4 border rounded-lg shadow-md">
+                    <div className="flex justify-between items-center mb-2">
+                      <h5 className="font-bold">{item.name}</h5>
+                      <Rating rating={item.rating} />
                     </div>
-                  ))
-                )}
-              </div>
-              {reviews.length >= 13 && (
+                    <p className="text-sm text-gray-500 mb-2">{moment(item.date).format("lll")}</p>
+                    <p>{item.comment || "No comment given..."}</p>
+                  </div>
+                ))
+              )}
+            </div>
+            {reviews.length >= 13 && (
+              <div className="mt-6">
                 <ReactPaginate
                   breakLabel="..."
                   nextLabel=">>"
@@ -232,58 +186,48 @@ const SingleFood = () => {
                   pageRangeDisplayed={3}
                   pageCount={pageCount}
                   previousLabel="<<"
-                  renderOnZeroPageCount={null}
-                  containerClassName="pagination"
+                  containerClassName="pagination flex gap-2 justify-center mt-4"
+                  activeClassName="font-bold underline"
                 />
-              )}
-            </div>
+              </div>
+            )}
           </div>
-        </div>
-        <div className="single-food-item container">
-          <h3 className="text-center" style={{ marginBottom: "20px" }}>
-            RECOMMENDED FOODS
-          </h3>
-          <div className="grid-4">
-            {recomFoods.slice(0, 4).map((item, index) => (
-              <div key={index} className="items shadow">
-                <div className="img">
+
+          <div>
+            <h3 className="text-2xl font-bold text-center mb-6">Recommended Foods</h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {recomFoods.slice(0, 4).map((item, index) => (
+                <div key={index} className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
                   <img
-                    src={"/food/" + item.thumb}
+                    src={`/food/${item.thumb}`}
                     alt={item.title}
-                    className="img-responsive img-curve"
+                    className="w-full h-48 object-cover"
                   />
-                </div>
-                <div className="text text-center">
-                  <h4>
-                    <Link href={`/food/${item._id}`}>{item.title}</Link>
-                  </h4>
-                  <h5>
-                    <Rating rating={item.rating} />
-                    <span>({item.totalReviews})</span>
-                  </h5>
-                  <p>{item.description.slice(0, 50)}...</p>
-                  <h5>Rs {item.price}</h5>
-                  <div className="flexSB">
-                    <Link href={`/food/${item._id}`} className="btn-primary">
-                      <i className="fas fa-eye"></i> View Detail
-                    </Link>
-                    {item.active === "on" ? (
-                      <Link
-                        href={`/food/${item._id}`}
-                        className="btn-primary"
-                      
-                      >
-                        <i className="fas fa-shopping-cart"></i> Add To Cart
+                  <div className="p-4 text-center space-y-2">
+                    <h4 className="font-semibold text-lg">
+                      <Link href={`/food/${item._id}`}>{item.title}</Link>
+                    </h4>
+                    <Rating rating={item.rating} /> <span>({item.totalReviews})</span>
+                    <p className="text-sm text-gray-600">{item.description.slice(0, 50)}...</p>
+                    <h5 className="font-bold">Rs {item.price}</h5>
+                    <div className="flex justify-center gap-2">
+                      <Link href={`/food/${item._id}`} className="btn-primary">
+                        <i className="fas fa-eye"></i> View Detail
                       </Link>
-                    ) : (
-                      <Link href="#" className="btn-primary disableLink">
-                        <i className="fas fa-shopping-cart"></i> Stock Out
-                      </Link>
-                    )}
+                      {item.active === "on" ? (
+                        <Link href={`/food/${item._id}`} className="btn-primary">
+                          <i className="fas fa-shopping-cart"></i> Add To Cart
+                        </Link>
+                      ) : (
+                        <span className="btn-primary bg-gray-400 cursor-not-allowed">
+                          <i className="fas fa-shopping-cart"></i> Stock Out
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>

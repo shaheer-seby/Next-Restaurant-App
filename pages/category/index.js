@@ -18,6 +18,7 @@ const Categories =  ({ categories= [] }) =>{
   const currentItems = categories.slice(itemOffset, endOffset);
   return (
     <section className="py-5">
+      <Banner title="Our Menu" subtitle="Explore Cuisines" />
       <div className="container">
         <motion.div
           className="text-center mb-5"

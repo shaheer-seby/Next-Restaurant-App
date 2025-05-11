@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 const CategoryDetailPage = ({ category, items }) => {
   const router = useRouter();
 
-  if (!category) return <h2 className="text-center py-5">Category not found</h2>;
+  if (!category) return <h2 className="text-center py-5 text-danger">Category not found</h2>;
 
   const handleClick = (id) => {
     router.push(`/food/${id}`);
@@ -12,25 +12,33 @@ const CategoryDetailPage = ({ category, items }) => {
 
   return (
     <div className="container py-5">
-      <h2 className="text-center mb-4">{category.title}</h2>
-      <div className="row">
-        {items.map(item => (
-          <div key={item._id} className="col-md-4 mb-4">
+      <h2 className="text-center mb-5 display-5 fw-bold text-primary">
+        {category}
+      </h2>
+
+      <div className="row g-4">
+        {items.map((item) => (
+          <div key={item._id} className="col-sm-6 col-lg-4">
             <div
-              className="card h-100 shadow-sm"
+              className="card h-100 shadow-sm border-0 hover-shadow transition"
+              style={{ cursor: 'pointer', borderRadius: '15px' }}
               onClick={() => handleClick(item._id)}
-              style={{ cursor: 'pointer' }}
             >
               <img
-                src={item.image}
+                src={item.thumb || 'https://via.placeholder.com/400x250'}
                 className="card-img-top"
                 alt={item.title}
-                style={{ height: '220px', objectFit: 'cover' }}
+                style={{ height: '230px', objectFit: 'cover', borderTopLeftRadius: '15px', borderTopRightRadius: '15px' }}
               />
-              <div className="card-body">
-                <h5 className="card-title">{item.title}</h5>
-                <p className="card-text">{item.description}</p>
-                <p className="fw-bold">Rs. {item.price}</p>
+              <div className="card-body d-flex flex-column">
+                <h5 className="card-title text-dark">{item.title}</h5>
+                <p className="card-text text-muted small flex-grow-1">{item.description}</p>
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                  <span className="fw-bold text-success">Rs. {item.price}</span>
+                  <span className="badge bg-warning text-dark">
+                    {item.rating} ⭐ ({item.totalReviews})
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -43,7 +51,7 @@ const CategoryDetailPage = ({ category, items }) => {
 export async function getServerSideProps(context) {
   const { title } = context.params;
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories/${title}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/foods/ByTitle/${title}`);
 
   if (!res.ok) {
     return { props: { category: null, items: [] } };

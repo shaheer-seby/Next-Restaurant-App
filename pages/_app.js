@@ -7,11 +7,17 @@ import "@/styles/homeStyles.module.css";
 import "@/styles/contact.css";
 import Header from "@/styles/header/Header";
 import Footer from "@/styles/footer/Footer";
+import HeroBanner from "./home/HeroBanner";
+
 export default function App({ Component, pageProps }) {
-  return(
+  return (
     <CartContextProvider>
-            <Component {...pageProps} />
+      <Header />
+      
+      <main>
+        <Component {...pageProps} />
+      </main>
+      <Footer />
     </CartContextProvider>
-  )
-   
+  );
 }
