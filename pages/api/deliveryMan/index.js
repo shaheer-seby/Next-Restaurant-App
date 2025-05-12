@@ -1,91 +1,81 @@
-// File: /pages/api/delivery-men/index.js
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
-import bcrypt from 'bcrypt';
 import { connectToDatabase } from '@/lib/db';
-import { ObjectId } from 'mongodb';
-
-const saltRounds = 10;
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = 'uploads/delivery-men';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '-' + file.originalname);
-  },
-});
-
-const upload = multer({ storage }).single('thumb');
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+import DeliveryMan from '@/models/deliveryMan.model';
 
 export default async function handler(req, res) {
-  const { db } = await connectToDatabase();
+  // Allow requests from frontend (adjust origin as needed)
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-    // allow localhost:3001 for quick testing
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-  
-    // Handle preflight request
-    if (req.method === 'OPTIONS') {
-      return res.status(200).end();
-    }
+  // Handle preflight request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
-  if (req.method === 'GET') {
-    try {
-      const deliveryMen = await db.collection('deliverymens').find().sort({ _id: -1 }).toArray();
-      res.status(200).json(deliveryMen);
-    } catch (error) {
-      res.status(500).json({ message: 'Failed to fetch delivery men.' });
-    }
-  } else if (req.method === 'POST') {
-    upload(req, res, async function (err) {
-      if (err) return res.status(500).json({ message: 'Upload failed', error: err });
+  // Connect to DB
+  await connectToDatabase();
 
+  const { method } = req;
+  const { id } = req.query;
+
+  switch (method) {
+    case 'GET':
       try {
-        const { name, email, phone, address } = req.body;
-        const existing = await db.collection('deliverymens').findOne({ email });
-
-        if (existing) return res.status(400).json({ message: 'Delivery boy already exists.' });
-
-        const avatar = Date.now() + '-avatar.png';
-        const defaultPath = 'uploads/default/avatar.png';
-        const copyPath = `uploads/delivery-men/${avatar}`;
-        fs.copyFileSync(defaultPath, copyPath);
-
-        const hash = await bcrypt.hash('admin', saltRounds);
-
-        const newDeliveryMan = {
-          name,
-          email,
-          password: hash,
-          thumb: avatar,
-          phone,
-          address,
-          reviews: [],
-          rating: 0,
-          totalReviews: 0,
-        };
-
-        await db.collection('deliverymens').insertOne(newDeliveryMan);
-        res.status(200).json({ message: 'Delivery boy registered successfully.' });
+        const deliveryMen = await DeliveryMan.find({});
+        res.status(200).json(deliveryMen);
       } catch (error) {
-        res.status(500).json({ message: 'Registration failed.', error: error.message });
+        console.error('❌ GET error:', error);
+        res.status(500).json({ message: 'Error fetching delivery men.' });
       }
-    });
-  } else {
-    res.status(405).json({ message: 'Method Not Allowed' });
+      break;
+
+    case 'POST':
+      try {
+        const newMan = await DeliveryMan.create(req.body);
+        res.status(201).json(newMan);
+      } catch (error) {
+        console.error('❌ POST error:', error);
+        res.status(400).json({ message: 'Error creating delivery man.', error });
+      }
+      break;
+
+    case 'PUT':
+      if (!id) {
+        return res.status(400).json({ message: 'ID is required for update.' });
+      }
+      try {
+        const updatedMan = await DeliveryMan.findByIdAndUpdate(id, req.body, {
+          new: true,
+          runValidators: true,
+        });
+        if (!updatedMan) {
+          return res.status(404).json({ message: 'Delivery man not found.' });
+        }
+        res.status(200).json(updatedMan);
+      } catch (error) {
+        console.error('❌ PUT error:', error);
+        res.status(400).json({ message: 'Error updating delivery man.', error });
+      }
+      break;
+
+    case 'DELETE':
+      if (!id) {
+        return res.status(400).json({ message: 'ID is required for deletion.' });
+      }
+      try {
+        const deleted = await DeliveryMan.findByIdAndDelete(id);
+        if (!deleted) {
+          return res.status(404).json({ message: 'Delivery man not found.' });
+        }
+        res.status(200).json({ message: 'Delivery man deleted.' });
+      } catch (error) {
+        console.error('❌ DELETE error:', error);
+        res.status(400).json({ message: 'Error deleting delivery man.', error });
+      }
+      break;
+
+    default:
+      res.status(405).json({ message: 'Method Not Allowed' });
   }
 }

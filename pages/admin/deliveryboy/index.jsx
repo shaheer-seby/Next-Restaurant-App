@@ -16,16 +16,26 @@ export default function DeliveryMenAdmin() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('/api/deliveryMan')
-      .then((res) => res.json())
-      .then((data) => {
-        setDeliveryMen(data);
-        setLoading(false);
-      })
-      .catch((err) => {
+    const fetchDeliveryMen = async () => {
+      try {
+        const res = await fetch('/api/deliveryMan');
+        const data = await res.json();
+
+        if (Array.isArray(data)) {
+          setDeliveryMen(data);
+        } else {
+          console.error('Unexpected response:', data);
+          setDeliveryMen([]);
+        }
+      } catch (err) {
         console.error('Error fetching delivery men:', err);
+        setDeliveryMen([]);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchDeliveryMen();
   }, []);
 
   const handleChange = (e) => {
@@ -75,15 +85,15 @@ export default function DeliveryMenAdmin() {
     }
   };
 
-  const fetchData = () => {
-    fetch('/api/deliveryMan')
-      .then((res) => res.json())
-      .then((data) => {
-        setDeliveryMen(data);
-      })
-      .catch((err) => {
-        console.error('Error fetching data:', err);
-      });
+  const fetchData = async () => {
+    try {
+      const res = await fetch('/api/deliveryMan');
+      const data = await res.json();
+      setDeliveryMen(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching data:', err);
+      setDeliveryMen([]);
+    }
   };
 
   const handleEdit = (deliveryMan) => {
@@ -99,108 +109,108 @@ export default function DeliveryMenAdmin() {
 
   return (
     <>
-    <Navbar/>
-    <div className="container mt-5">
-      <h2>Delivery Boy Management</h2>
+      <Navbar />
+      <div className="container mt-5">
+        <h2>Delivery Boy Management</h2>
 
-      <form onSubmit={handleAddEdit} className="mt-4">
-        <h3>{isEditing ? 'Edit Delivery Boy' : 'Add New Delivery Boy'}</h3>
-        <div className="mb-3">
-          <label className="form-label">Name</label>
-          <input
-            type="text"
-            className="form-control"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input
-            type="email"
-            className="form-control"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Phone</label>
-          <input
-            type="tel"
-            className="form-control"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label className="form-label">Address</label>
-          <input
-            type="text"
-            className="form-control"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          {isEditing ? 'Update Delivery Boy' : 'Add Delivery Boy'}
-        </button>
-      </form>
-
-      <div className="table-responsive mt-4">
-        <h3 className="mt-5">Delivery Boy List</h3>
-        {loading ? (
-          <div className="text-center mt-4">
-            <div className="spinner-border" role="status" />
+        <form onSubmit={handleAddEdit} className="mt-4">
+          <h3>{isEditing ? 'Edit Delivery Boy' : 'Add New Delivery Boy'}</h3>
+          <div className="mb-3">
+            <label className="form-label">Name</label>
+            <input
+              type="text"
+              className="form-control"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
           </div>
-        ) : deliveryMen.length === 0 ? (
-          <p>No delivery boy found.</p>
-        ) : (
-          <table className="table table-striped mt-4">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Address</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {deliveryMen.map((deliveryMan) => (
-                <tr key={deliveryMan._id}>
-                  <td>{deliveryMan.name}</td>
-                  <td>{deliveryMan.email}</td>
-                  <td>{deliveryMan.phone}</td>
-                  <td>{deliveryMan.address}</td>
-                  <td>
-                    <button
-                      className="btn btn-warning me-2"
-                      onClick={() => handleEdit(deliveryMan)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(deliveryMan._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
+          <div className="mb-3">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              className="form-control"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Phone</label>
+            <input
+              type="tel"
+              className="form-control"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Address</label>
+            <input
+              type="text"
+              className="form-control"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">
+            {isEditing ? 'Update Delivery Boy' : 'Add Delivery Boy'}
+          </button>
+        </form>
+
+        <div className="table-responsive mt-4">
+          <h3 className="mt-5">Delivery Boy List</h3>
+          {loading ? (
+            <div className="text-center mt-4">
+              <div className="spinner-border" role="status" />
+            </div>
+          ) : deliveryMen.length === 0 ? (
+            <p>No delivery boys found.</p>
+          ) : (
+            <table className="table table-striped mt-4">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Address</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+              </thead>
+              <tbody>
+                {deliveryMen.map((deliveryMan) => (
+                  <tr key={deliveryMan._id}>
+                    <td>{deliveryMan.name}</td>
+                    <td>{deliveryMan.email}</td>
+                    <td>{deliveryMan.phone}</td>
+                    <td>{deliveryMan.address}</td>
+                    <td>
+                      <button
+                        className="btn btn-warning me-2"
+                        onClick={() => handleEdit(deliveryMan)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(deliveryMan._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 }

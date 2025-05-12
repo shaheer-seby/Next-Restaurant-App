@@ -10,7 +10,7 @@ import { SessionProvider } from 'next-auth/react';
 import Footer from "@/styles/footer/Footer";
 import Layout from "@/components/layout/layout";
 export default function App({ Component, pageProps }) {
-  return(
+  return (
     <CartContextProvider>
 
 {/* <SessionProvider> */}

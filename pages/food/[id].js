@@ -2,7 +2,6 @@ import React, { useEffect, useState, useContext } from "react";
 import PageHeader from "../../styles/header/title/PageHeader";
 import "../../styles/food.module.css";
 import Link from "next/link";
-// import { useCart } from "react-use-cart";
 import Swal from "sweetalert2";
 import Rating from "../../styles/rating/Rating";
 import moment from "moment";
@@ -14,9 +13,8 @@ const SingleFood = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  // MOCK FOOD DATA
   const mockFood = {
-    _id: "1", // Default ID if router.query.id is not available yet
+    _id: "1",
     title: "Cheese Burst Pizza",
     description: "A cheesy delight with crispy crust and flavorful toppings.",
     price: 499,
@@ -84,29 +82,26 @@ const SingleFood = () => {
     },
   ];
 
-  // USE STATES
-  const [food, setFood] = useState(mockFood); // Initialize with default values
+  const [food, setFood] = useState(mockFood);
   const [reviews, setReviews] = useState([]);
   const [recomFoods, setRecomFoods] = useState(mockRecomFoods);
 
   useEffect(() => {
-  if (id) {
-  const fetchFood = async () => {
-    try {
-      const res = await fetch(`/api/foods/${id}`);
-      const data = await res.json();
-      setFood(data);
-      setReviews((data.reviews || []).reverse());
-    } catch (error) {
-      console.error("Error fetching food:", error);
+    if (id) {
+      const fetchFood = async () => {
+        try {
+          const res = await fetch(`/api/foods/${id}`);
+          const data = await res.json();
+          setFood(data);
+          setReviews((data.reviews || []).reverse());
+        } catch (error) {
+          console.error("Error fetching food:", error);
+        }
+      };
+      fetchFood();
     }
-  };
-  fetchFood();
-}
-
   }, [id]);
 
-  // PAGINATION
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
   const cart= useContext(CartContext);
@@ -125,166 +120,219 @@ const SingleFood = () => {
     });
   };
 
-  // ADD-TO-CART
-  // const { addItem } = useCart();
-  // const addItemHandlar = (item, id) => {
-  //   item.id = id;
-  //   addItem(item);
-  //   Swal.fire({
-  //     icon: "success",
-  //     title: item.title + " Added.",
-  //     showConfirmButton: false,
-  //     timer: 1000,
-  //   });
-  // };
-
-  // Show loading if no data is available yet
   if (router.isFallback) {
-    return <div>Loading...</div>;
+    return <div className="text-center py-10">Loading...</div>;
   }
 
   return (
     <>
       <Banner title={food.category} subtitle={food.title} />
-      <section className="food single-food">
-        <div className="container">
-          <div className="single-food-item grid-2">
-            <div className="left">
-              <img src={"/foods/" + food.thumb} alt={food.title} />
-            </div>
-            <div className="right">
-              <h3>{food.title}</h3>
-              <p>{food.description}</p>
-              <div className="single-order-form">
-                <ul>
-                  <li>
-                    <span>Price</span>
-                    <h4>Rs {food.price}</h4>
-                  </li>
-                  <li>
-                    <span>Category</span>
-                    <h4>{food.category}</h4>
-                  </li>
-                  <li>
-                    <span>Reviews</span>
-                    <h4>
-                      <Rating rating={food.rating} />
-                      <span>({food.totalReviews})</span>
-                    </h4>
-                  </li>
-                  <li>
-                    <span>Status</span>
-                    <h4>
-                      {food.active === "on" ? "Available" : "Unavailable"}
-                    </h4>
-                  </li>
-                  <li>
-                    {food.active === "on" ? (
-                     null
-                    ) : (
-                      <Link href="#" className="btn-primary disableLink">
-                        <i className="fas fa-shopping-cart"></i> Out Of Stock
-                      </Link>
-                    )}
-                  </li>
-                </ul>
- <button onClick={()=>{cart.addItem({id:1,name: 'hi',price: 1000})}}>
-                         Add To Cart
-                      </button>
-              </div>
-            </div>
-          </div>
+     <section style={{ background: "linear-gradient(to bottom right, #fff7ed, #fff)", padding: "60px 0" }}>
+  <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 20px" }}>
+    {/* Food Details */}
+    <div style={{
+      display: "flex",
+      flexDirection: "row",
+      gap: "40px",
+      background: "#fff",
+      padding: "30px",
+      borderRadius: "20px",
+      boxShadow: "0 8px 30px rgba(0,0,0,0.1)",
+      marginBottom: "60px"
+    }}>
+      <img
+        src={`/foods/${food.thumb}`}
+        alt={food.title}
+        style={{
+          width: "100%",
+          maxWidth: "500px",
+          height: "auto",
+          borderRadius: "15px",
+          objectFit: "cover",
+          boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+        }}
+      />
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "20px" }}>
+        <h1 style={{ fontSize: "32px", fontWeight: "bold", color: "#333" }}>{food.title}</h1>
+        <p style={{ fontSize: "16px", color: "#555" }}>{food.description}</p>
+        <ul style={{ listStyle: "none", padding: 0, color: "#444", fontSize: "16px", lineHeight: "1.8" }}>
+          <li><strong>Price:</strong> Rs {food.price}</li>
+          <li><strong>Category:</strong> {food.category}</li>
+          <li><strong>Rating:</strong> <Rating rating={food.rating} /> ({food.totalReviews})</li>
+          <li><strong>Status:</strong> {food.active === "on" ? "Available" : "Unavailable"}</li>
+        </ul>
+<button
+                    onClick={() => cart.addItem({id:1, name:'hi',price:1000})}
+                    style={{
+                      width: '2.5rem',
+                      height: '2.5rem',
+                      borderRadius: '9999px',
+                      backgroundColor: '#ffedd5',
+                      color: '#059669',
+                      fontWeight: '700',
+                      fontSize: '1.25rem',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    +
+                  </button>
+        {food.active === "on" ? (
+          <Link href={`/food/${food._id}`} style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            backgroundColor: "#22c55e",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius: "10px",
+            textDecoration: "none",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+          }}>
+            <i className="fas fa-shopping-cart" style={{ marginRight: "8px" }}></i> Add To Cart
+          </Link>
+        ) : (
+          <span style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            backgroundColor: "#a3a3a3",
+            color: "#fff",
+            borderRadius: "10px",
+            cursor: "not-allowed",
+            fontWeight: "bold"
+          }}>
+            <i className="fas fa-shopping-cart" style={{ marginRight: "8px" }}></i> Out Of Stock
+          </span>
+        )}
+      </div>
+    </div>
 
-          <div className="single-food-item">
-            <div className="all-review">
-              <h3 className="text-center" style={{ marginBottom: "20px" }}>
-                REVIEWS
-              </h3>
-              <div className="grid-4">
-                {reviews.length === 0 ? (
-                  <div className="review-item">
-                    <p>No feedback has been given yet.</p>
-                  </div>
-                ) : (
-                  currentItems.map((item, index) => (
-                    <div key={index} className="review-item">
-                      <div className="grid-2">
-                        <h5 className="name bold">{item.name}</h5>
-                        <Rating rating={item.rating} />
-                      </div>
-                      <p className="date">
-                        {item.date && moment(item.date).format("lll")}
-                      </p>
-                      <p className="content">
-                        {item.comment ? item.comment : "No comment given..."}
-                      </p>
-                    </div>
-                  ))
-                )}
-              </div>
-              {reviews.length >= 13 && (
-                <ReactPaginate
-                  breakLabel="..."
-                  nextLabel=">>"
-                  onPageChange={handlePageClick}
-                  pageRangeDisplayed={3}
-                  pageCount={pageCount}
-                  previousLabel="<<"
-                  renderOnZeroPageCount={null}
-                  containerClassName="pagination"
-                />
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="single-food-item container">
-          <h3 className="text-center" style={{ marginBottom: "20px" }}>
-            RECOMMENDED FOODS
-          </h3>
-          <div className="grid-4">
-            {recomFoods.slice(0, 4).map((item, index) => (
-              <div key={index} className="items shadow">
-                <div className="img">
-                  <img
-                    src={"/food/" + item.thumb}
-                    alt={item.title}
-                    className="img-responsive img-curve"
-                  />
+    {/* Reviews */}
+    <div style={{ marginBottom: "60px" }}>
+      <h2 style={{ fontSize: "28px", fontWeight: "bold", textAlign: "center", marginBottom: "30px", color: "#333" }}>
+        Customer Reviews
+      </h2>
+      {reviews.length === 0 ? (
+        <p style={{ textAlign: "center", color: "#666" }}>No feedback has been given yet.</p>
+      ) : (
+        <>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "20px"
+          }}>
+            {currentItems.map((item, index) => (
+              <div key={index} style={{
+                backgroundColor: "#fff",
+                padding: "20px",
+                borderRadius: "15px",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.05)"
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+                  <h4 style={{ fontWeight: "bold", color: "#333" }}>{item.name}</h4>
+                  <Rating rating={item.rating} />
                 </div>
-                <div className="text text-center">
-                  <h4>
-                    <Link href={`/food/${item._id}`}>{item.title}</Link>
-                  </h4>
-                  <h5>
-                    <Rating rating={item.rating} />
-                    <span>({item.totalReviews})</span>
-                  </h5>
-                  <p>{item.description.slice(0, 50)}...</p>
-                  <h5>Rs {item.price}</h5>
-                  <div className="flexSB">
-                    <Link href={`/food/${item._id}`} className="btn-primary">
-                      <i className="fas fa-eye"></i> View Detail
-                    </Link>
-                    {item.active === "on" ? (
-                      <Link
-                        href={`/food/${item._id}`}
-                        className="btn-primary"
-                      
-                      >
-                        <i className="fas fa-shopping-cart"></i> Add To Cart
-                      </Link>
-                    ) : (
-                      <Link href="#" className="btn-primary disableLink">
-                        <i className="fas fa-shopping-cart"></i> Stock Out
-                      </Link>
-                    )}
-                  </div>
-                </div>
+                <p style={{ fontSize: "14px", color: "#999", marginBottom: "10px" }}>
+                  {moment(item.date).format("lll")}
+                </p>
+                <p style={{ color: "#444" }}>{item.comment || "No comment given..."}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+          {reviews.length >= 13 && (
+            <div style={{ marginTop: "30px" }}>
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel=">>"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                pageCount={pageCount}
+                previousLabel="<<"
+                containerClassName="pagination"
+                activeClassName="selected"
+              />
+            </div>
+          )}
+        </>
+      )}
+    </div>
+
+    {/* Recommended Foods */}
+    <div>
+      <h2 style={{ fontSize: "28px", fontWeight: "bold", textAlign: "center", marginBottom: "40px", color: "#333" }}>
+        Recommended Foods
+      </h2>
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "20px"
+      }}>
+        {recomFoods.slice(0, 4).map((item, index) => (
+          <div key={index} style={{
+            backgroundColor: "#fff",
+            borderRadius: "15px",
+            boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+            overflow: "hidden",
+            transition: "transform 0.2s ease"
+          }}>
+            <img
+              src={`/food/${item.thumb}`}
+              alt={item.title}
+              style={{
+                width: "100%",
+                height: "150px",
+                objectFit: "cover"
+              }}
+            />
+            <div style={{ padding: "20px", textAlign: "center" }}>
+              <h4 style={{ fontSize: "18px", fontWeight: "bold", color: "#222", marginBottom: "10px" }}>{item.title}</h4>
+              <div style={{ marginBottom: "8px", fontSize: "14px", color: "#888" }}>
+                <Rating rating={item.rating} /> ({item.totalReviews})
+              </div>
+              <p style={{ fontSize: "14px", color: "#666", marginBottom: "8px" }}>{item.description.slice(0, 50)}...</p>
+              <h5 style={{ fontWeight: "bold", color: "#10b981", marginBottom: "10px" }}>Rs {item.price}</h5>
+              <div style={{ display: "flex", justifyContent: "center", gap: "10px", flexWrap: "wrap" }}>
+                <Link href={`/food/${item._id}`} style={{
+                  padding: "8px 12px",
+                  backgroundColor: "#3b82f6",
+                  color: "#fff",
+                  borderRadius: "8px",
+                  textDecoration: "none",
+                  fontSize: "14px"
+                }}>
+                  <i className="fas fa-eye" style={{ marginRight: "5px" }}></i> View
+                </Link>
+                {item.active === "on" ? (
+                  <Link href={`/food/${item._id}`} style={{
+                    padding: "8px 12px",
+                    backgroundColor: "#22c55e",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    textDecoration: "none",
+                    fontSize: "14px"
+                  }}>
+                    <i className="fas fa-shopping-cart" style={{ marginRight: "5px" }}></i> Add
+                  </Link>
+                ) : (
+                  <span style={{
+                    padding: "8px 12px",
+                    backgroundColor: "#a3a3a3",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    fontSize: "14px"
+                  }}>
+                    <i className="fas fa-shopping-cart" style={{ marginRight: "5px" }}></i> Out
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+
     </>
   );
 };

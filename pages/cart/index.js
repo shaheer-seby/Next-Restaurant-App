@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import CartContext from '@/context/context';
 
 function CartPage() {
-  const cart= useContext(CartContext);
-  console.log('cart',cart.cartItems)
+  const cart = useContext(CartContext);
+  console.log('cart', cart.cartItems);
   const total = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const dummyItems = [
@@ -16,7 +16,7 @@ function CartPage() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(to bottom right, #f0f4ff, #fefeff)',
+        background: 'linear-gradient(to bottom right, #fbe8e8, #fbded9)',
         padding: '3rem 1rem',
         fontFamily: 'sans-serif',
       }}
@@ -25,11 +25,11 @@ function CartPage() {
         style={{
           maxWidth: '960px',
           margin: '0 auto',
-          backgroundColor: 'white',
+          backgroundColor: '#fef2f1',
           padding: '2rem',
           borderRadius: '1.5rem',
           boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e0e0e0',
+          border: '1px solid #f5d0c5',
         }}
       >
         <h1
@@ -37,7 +37,7 @@ function CartPage() {
             fontSize: '2.5rem',
             fontWeight: '800',
             textAlign: 'center',
-            color: '#4f46e5',
+            color: '#ff6f61',
             marginBottom: '2.5rem',
           }}
         >
@@ -50,14 +50,14 @@ function CartPage() {
               key={item.id}
               onClick={() => cart.addItem(item)}
               style={{
-                backgroundColor: '#6366f1',
+                backgroundColor: '#fbbf24',
                 color: '#fff',
                 padding: '0.75rem',
                 borderRadius: '1rem',
                 fontWeight: '600',
                 border: 'none',
                 cursor: 'pointer',
-                boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
               }}
             >
               ➕ Add {item.name}
@@ -78,10 +78,10 @@ function CartPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  backgroundColor: '#f9fafb',
+                  backgroundColor: '#f9f0f2', // Soft skin tone background
                   padding: '1rem',
                   borderRadius: '1.25rem',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
                 }}
               >
                 <div>
@@ -90,7 +90,7 @@ function CartPage() {
                   </h2>
                   <p style={{ color: '#6b7280', marginTop: '0.25rem' }}>
                     ${item.price.toFixed(2)} × {item.quantity} ={' '}
-                    <span style={{ fontWeight: '700', color: '#4f46e5' }}>
+                    <span style={{ fontWeight: '700', color: '#f76c5e' }}>
                       ${(item.price * item.quantity).toFixed(2)}
                     </span>
                   </p>
@@ -103,7 +103,7 @@ function CartPage() {
                       width: '2.5rem',
                       height: '2.5rem',
                       borderRadius: '9999px',
-                      backgroundColor: '#fee2e2',
+                      backgroundColor: '#ffb3b3', // Soft pink background
                       color: '#dc2626',
                       fontWeight: '700',
                       fontSize: '1.25rem',
@@ -120,8 +120,8 @@ function CartPage() {
                       width: '2.5rem',
                       height: '2.5rem',
                       borderRadius: '9999px',
-                      backgroundColor: '#d1fae5',
-                      color: '#059669',
+                      backgroundColor: '#fff0e6', // Light peach
+                      color: '#4caf50',
                       fontWeight: '700',
                       fontSize: '1.25rem',
                       border: 'none',
@@ -141,12 +141,12 @@ function CartPage() {
             marginTop: '3rem',
             textAlign: 'right',
             padding: '1.5rem',
-            backgroundColor: '#eef2ff',
+            backgroundColor: '#fff5e6', // Soft peach background for total
             borderRadius: '1rem',
             fontSize: '1.5rem',
             fontWeight: '700',
-            color: '#4338ca',
-            boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.05)',
+            color: '#ff6f61',
+            boxShadow: 'inset 0 2px 6px rgba(0, 0, 0, 0.05)',
           }}
         >
           Total: ${total.toFixed(2)}
