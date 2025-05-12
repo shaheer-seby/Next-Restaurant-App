@@ -14,9 +14,11 @@ export default function App({ Component, pageProps }) {
     <CartContextProvider>
 
 {/* <SessionProvider> */}
+<Header />
 <Layout>
             <Component {...pageProps} />
 </Layout>
+<Footer />
 {/* </SessionProvider> */}
     </CartContextProvider>
 

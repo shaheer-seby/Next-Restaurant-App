@@ -30,11 +30,11 @@ const Navbar = () => {
                 Dashboard
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link href="/admin/deliveryboy" className="nav-link">
                 Delivery Boy
               </Link>
-            </li>
+            </li> */}
             <li className="nav-item">
               <Link href="/admin/categories" className="nav-link">
                 Categories

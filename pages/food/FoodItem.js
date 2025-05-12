@@ -16,7 +16,7 @@ const FoodItem = ({ foods }) => {
   const endOffset = itemOffset + itemsPerPage;
   const currentItems = foods.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(foods.length / itemsPerPage);
-cha
+
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % foods.length;
     setItemOffset(newOffset);

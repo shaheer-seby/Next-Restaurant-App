@@ -37,31 +37,40 @@ const CategoriesPage = () => {
 
   return (
     <>
-    <Navbar/>
-    <div className="container my-5">
-      <h1 className="text-center my-4">Categories</h1>
-      <div className="row">
-        {categories.map((category) => (
-          <div className="col-md-4 mb-4" key={category._id}>
-            <div className="card shadow-sm border-light rounded">
-              <img
-                src={`/uploads/categories/${category.thumb}`}
-                alt={category.title}
-                className="card-img-top"
-                style={{ height: '200px', objectFit: 'cover' }}
-              />
-              <div className="card-body">
-                <h5 className="card-title">{category.title}</h5>
-                <p className="card-text">{category.featured ? 'Featured' : 'Regular'} {category.active ? '(Active)' : '(Inactive)'}</p>
-                <Link href={`/categories/${category.title}`}>
-                  <button className="btn btn-primary">View Details</button>
-                </Link>
+      <Navbar />
+      <div className="container my-5">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h1>Categories</h1>
+          
+        </div>
+
+        <div className="row">
+          {categories.map((category) => (
+            <div className="col-md-4 mb-4" key={category._id}>
+              <div className="card shadow-sm border-light rounded h-100">
+                <img
+                  src={`/uploads/categories/${category.thumb}`}
+                  alt={category.title}
+                  className="card-img-top"
+                  style={{ height: '200px', objectFit: 'cover' }}
+                />
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{category.title}</h5>
+                  <p className="card-text">
+                    {category.featured ? 'Featured' : 'Regular'}{' '}
+                    {category.active ? '(Active)' : '(Inactive)'}
+                  </p>
+                  <div className="mt-auto d-flex justify-content-between">
+                    <Link href={`/admin/categories/${category.title}`}>
+                      <button className="btn btn-primary">View</button>
+                    </Link>
+                                     </div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     </>
   );
 };

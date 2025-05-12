@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { useContext } from 'react';
 
 export default NextAuth.default({
+    debug: true,
 callbacks: {
   async jwt({ token, user }) {
     if (user) {

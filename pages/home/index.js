@@ -8,7 +8,8 @@ import Blog from "../blogs";
 const Home = () => {
   return (
     <>
-      {/* <HeroBanner /> */}
+    
+      <HeroBanner />
       <div className="container text-center my-5">
         <h2 className="display-4 mb-4">Welcome to Our Website</h2>
         <p className="lead mb-4">Choose a page to explore:</p>
@@ -19,7 +20,7 @@ const Home = () => {
           <Link href="/payment" className="btn btn-primary mx-2 px-4 py-2">
           Pay
           </Link>
-          <Link href="/home/Hfood" className="btn btn-primary mx-2 px-4 py-2">
+          <Link href="/food" className="btn btn-primary mx-2 px-4 py-2">
             Explore Food
           </Link>
           <Link href="/category" className="btn btn-primary mx-2 px-4 py-2">

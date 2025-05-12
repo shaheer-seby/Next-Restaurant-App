@@ -1,4 +1,3 @@
-// pages/api/foods/index.js
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
@@ -20,25 +19,19 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).single('thumb');
 
-
-
-
 export default async function handler(req, res) {
   const { db } = await connectToDatabase();
 
-  // allow localhost:3001 for quick testing
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-  // Handle preflight request
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
   if (req.method === 'GET') {
-    // Handle GET request (list food items or search)
     const { q } = req.query;
 
     try {
@@ -49,32 +42,39 @@ export default async function handler(req, res) {
       res.status(500).json({ message: 'Error fetching food items', error: error.message });
     }
   } else if (req.method === 'POST') {
-    // Handle POST request (create new food item)
     upload(req, res, async function (err) {
       if (err) {
         return res.status(500).json({ message: 'File upload error', error: err });
       }
 
-      const { title, price, featured, active, category, description } = req.body;
+      const { title, price, featured, active, type, description } = req.body;
       const newFood = {
         title,
         price: Number(price),
-        featured,
-        active,
-        category,
+       featured: featured === 'on' ? 'on' : 'off',
+active: active === 'on' ? 'on' : 'off',
+
+
+        type,
         description,
-        thumb: req.file.filename,
+        thumb: req.file?.filename || '',
       };
 
       try {
-        const result = await db.collection('foods').insertOne(newFood);
+        await db.collection('foods').insertOne(newFood);
         res.status(200).json({ message: 'Food item added successfully.' });
       } catch (error) {
         res.status(500).json({ message: 'Error creating food item', error: error.message });
       }
     });
   } else {
-
     res.status(405).json({ message: 'Method Not Allowed' });
   }
 }
+
+// 👇 Needed for multer to work in Next.js
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

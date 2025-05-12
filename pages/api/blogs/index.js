@@ -5,10 +5,14 @@ import { connectToDatabase } from "@/lib/db"; // Make sure this is set up to han
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/blogs/");
+    const uploadDir = 'uploads/blogs';
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    const name = Date.now() + "-" + file.originalname;
+    const name = Date.now() + '-' + file.originalname;
     cb(null, name);
   },
 });
@@ -69,4 +73,10 @@ export default async function handler(req, res) {
   } else {
     res.status(405).json({ message: "Method Not Allowed" });
   }
+  
 }
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};

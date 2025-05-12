@@ -57,8 +57,9 @@ export default async function handler(req, res) {
       const updateData = {
         title,
         price: Number(price),
-        featured,
-        active,
+      featured: featured === 'on' ? 'on' : 'off',
+active: active === 'on' ? 'on' : 'off',
+
         category,
         description,
       };
@@ -108,3 +109,8 @@ export default async function handler(req, res) {
     res.status(405).json({ message: 'Method Not Allowed' });
   }
 }
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
