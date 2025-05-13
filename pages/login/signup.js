@@ -81,7 +81,7 @@ export default function SignUp() {
           <button type="submit" style={styles.buttonPrimary}>
             Register
           </button>
-          <Link href="/login/login" passHref>
+          <Link href="/login" passHref>
             <button type="button" style={styles.buttonSecondary}>
               Already have an account? Login
             </button>

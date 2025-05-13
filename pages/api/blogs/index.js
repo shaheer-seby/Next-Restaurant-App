@@ -5,7 +5,7 @@ import { connectToDatabase } from "@/lib/db"; // Make sure this is set up to han
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = 'uploads/blogs';
+    const uploadDir = 'public/uploads/blogs';
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }

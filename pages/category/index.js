@@ -75,7 +75,7 @@ const Categories = ({ categories = [] }) => {
                   }}
                 >
                   <img
-                    src={`/uploads/categories/${cat.thumb}`}
+                    src={`/uploads/food/${cat.thumb}`}
                     alt={cat.title}
                     style={{
                       position: 'absolute',

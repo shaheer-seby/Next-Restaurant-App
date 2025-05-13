@@ -6,7 +6,7 @@ import { connectToDatabase } from "@/lib/db"; // Your DB connection utility
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/blogs/");
+    cb(null, "public/uploads/food/");
   },
   filename: function (req, file, cb) {
     const name = Date.now() + "-" + file.originalname;
@@ -44,56 +44,72 @@ export default async function handler(req, res) {
       res.status(500).json({ message: "An error occurred fetching the blog.", error: error.message });
     }
   } else if (req.method === "PUT") {
-    // UPDATE BLOG
-    upload(req, res, async (err) => {
-      if (err) {
-        return res.status(500).json({ message: "Error uploading file", error: err });
-      }
+  upload(req, res, async (err) => {
+    if (err) {
+      console.error("Multer error:", err);
+      return res.status(500).json({ message: "Error uploading file", error: err.message });
+    }
 
-      try {
-        const updateData = {
-          title: req.body.title,
-          featured: req.body.featured,
-          description: req.body.description,
-        };
-
-        if (req.file) {
-          const oldThumb = req.body.oldThumb;
-          fs.unlinkSync(path.join("uploads/blogs", oldThumb)); // Delete old thumbnail
-          updateData.thumb = req.file.filename;
-        }
-
-        const result = await db.collection("blogs").updateOne(
-          { _id: new ObjectId(id) },  // Use ObjectId here
-          { $set: updateData }
-        );
-
-        if (!result.matchedCount) {
-          return res.status(404).json({ message: "Blog not found." });
-        }
-
-        res.status(200).json({ message: "Blog updated successfully." });
-      } catch (error) {
-        res.status(500).json({ message: "Error updating the blog.", error: error.message });
-      }
-    });
-  } else if (req.method === "DELETE") {
-    // DELETE BLOG
     try {
-      const blog = await db.collection("blogs").findOne({ _id: new ObjectId(id) });  // Use ObjectId here
-      if (!blog) {
+      const updateData = {
+        title: req.body.title,
+        featured: req.body.featured,
+        description: req.body.description,
+      };
+
+      if (req.file) {
+        const oldThumb = req.body.oldThumb;
+
+        if (oldThumb) {
+          try {
+            const oldPath = path.join(process.cwd(), "public/uploads/food", oldThumb);
+            fs.unlinkSync(oldPath); // Delete old file
+          } catch (unlinkErr) {
+            console.warn("Could not delete old thumbnail:", unlinkErr.message);
+          }
+        }
+
+        updateData.thumb = req.file.filename;
+      }
+
+      const result = await db.collection("blogs").updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updateData }
+      );
+
+      if (!result.matchedCount) {
         return res.status(404).json({ message: "Blog not found." });
       }
 
-      const thumbPath = path.join("uploads/blogs", blog.thumb);
-      fs.unlinkSync(thumbPath); // Delete the image file
-
-      await db.collection("blogs").deleteOne({ _id: new ObjectId(id) });  // Use ObjectId here
-      res.status(200).json({ message: "Blog deleted successfully." });
+      res.status(200).json({ message: "Blog updated successfully." });
     } catch (error) {
-      res.status(500).json({ message: "An error occurred deleting the blog.", error: error.message });
+      console.error("Update error:", error);
+      return res.status(500).json({ message: "Error updating the blog.", error: error.message });
     }
-  } else {
+  });
+} else if (req.method === "DELETE") {
+  try {
+    const blog = await db.collection("blogs").findOne({ _id: new ObjectId(id) });
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found." });
+    }
+
+    // ✅ Correct the path to the image
+    const thumbPath = path.join(process.cwd(), "public", "uploads", "food", blog.thumb);
+
+    try {
+      fs.unlinkSync(thumbPath);
+    } catch (unlinkErr) {
+      console.warn("Could not delete thumbnail file:", unlinkErr.message);
+    }
+
+    await db.collection("blogs").deleteOne({ _id: new ObjectId(id) });
+    res.status(200).json({ message: "Blog deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred deleting the blog.", error: error.message });
+  }
+}
+else {
     res.status(405).json({ message: "Method Not Allowed" });
   }
 }

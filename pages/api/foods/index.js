@@ -1,11 +1,11 @@
 import multer from 'multer';
 import fs from 'fs';
-import path from 'path';
+
 import { connectToDatabase } from '@/lib/db';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadDir = 'uploads/foods';
+    const uploadDir = 'public/uploads/foods';
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -72,7 +72,7 @@ active: active === 'on' ? 'on' : 'off',
   }
 }
 
-// 👇 Needed for multer to work in Next.js
+
 export const config = {
   api: {
     bodyParser: false,

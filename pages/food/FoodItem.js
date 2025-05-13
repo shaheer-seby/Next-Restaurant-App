@@ -1,15 +1,12 @@
-'use client'; // Required for useState and useCart
+'use client';
 
 import React, { useState } from "react";
 import Link from "next/link"; 
-// import { useCart } from "react-use-cart";
-
 import Rating from "../../styles/rating/Rating";
 import ReactPaginate from "react-paginate";
+import styles from "../../styles/food.module.css"; // Make sure the path matches your CSS file location
 
 const FoodItem = ({ foods }) => {
-  // PAGINATION
-  
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 12;
 
@@ -27,33 +24,20 @@ const FoodItem = ({ foods }) => {
     });
   };
 
-  // ADD-TO-CART
-  // const { addItem } = useCart();
-  // const addItemHandler = (item, id) => {
-  //   item.id = id;
-  //   addItem(item);
-  //   Swal.fire({
-  //     icon: "success",
-  //     text: item.title + " Added.",
-  //     showConfirmButton: false,
-  //     timer: 1000,
-  //   });
-  // };
-
   return (
     <>
-      <div className="grid-4">
+      <div className={styles["food-grid"]}>
         {currentItems.length === 0 ? (
           <h3 className="text-center">No items found!</h3>
         ) : (
           currentItems.map((item, index) => (
-            <div key={index} className="items shadow">
-              <div className="img">
+            <div key={index} className={styles["food-card"] + " shadow"}>
+              <div className={styles["img-wrapper"]}>
                 <Link href={`/food/${item._id}`} className="text-decoration-none">
                   <img
-                    src={`/food/${item.thumb}`}
+                    src={item.thumb ? `/uploads/foods/${item.thumb}` : 'https://via.placeholder.com/400x250'}
                     alt={item.title}
-                    className="img-responsive img-curve"
+                    className={styles["food-image"]}
                   />
                 </Link>
               </div>
@@ -74,10 +58,7 @@ const FoodItem = ({ foods }) => {
                     <i className="fas fa-eye"></i> View Detail
                   </Link>
                   {item.active === "on" ? (
-                    <button
-                      className="btn-primary"
-                   
-                    >
+                    <button className="btn-primary">
                       <i className="fas fa-shopping-cart"></i> Add To Cart
                     </button>
                   ) : (

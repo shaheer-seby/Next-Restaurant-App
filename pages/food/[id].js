@@ -141,7 +141,8 @@ const SingleFood = () => {
       marginBottom: "60px"
     }}>
       <img
-        src={`/foods/${food.thumb}`}
+       src={`/uploads/foods/${food.thumb}` || 'https://via.placeholder.com/400x250'}
+
         alt={food.title}
         style={{
           width: "100%",
@@ -275,7 +276,8 @@ const SingleFood = () => {
             transition: "transform 0.2s ease"
           }}>
             <img
-              src={`/food/${item.thumb}`}
+             src={`/uploads/foods/${food.thumb}` || 'https://via.placeholder.com/400x250'}
+
               alt={item.title}
               style={{
                 width: "100%",

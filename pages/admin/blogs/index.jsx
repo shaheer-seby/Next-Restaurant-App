@@ -46,6 +46,29 @@ const BlogsPage = () => {
     }));
   };
 
+const handleDelete = async (id) => {
+  const confirmed = window.confirm("Are you sure you want to delete this blog?");
+  if (!confirmed) return;
+
+  try {
+    const response = await fetch(`/api/blogs/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (response.ok) {
+      // Remove the deleted blog from the UI
+      setBlogs((prev) => prev.filter((blog) => blog._id !== id));
+    } else {
+      const errorData = await response.json();
+      console.error("Delete failed:", errorData.message);
+      setError(errorData.message || "Failed to delete blog.");
+    }
+  } catch (err) {
+    console.error("Delete request error:", err);
+    setError("Error deleting blog.");
+  }
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -76,25 +99,32 @@ const BlogsPage = () => {
       {error && <div className="alert alert-danger">{error}</div>}
 
       <div className="row">
-        {blogs.map((blog) => (
-          <div className="col-md-4 mb-4" key={blog._id}>
-            <div className="card shadow-sm border-light rounded">
-              <img
-                src={`/uploads/blogs/${blog.thumb}`}
-                alt={blog.title}
-                className="card-img-top"
-                style={{ height: '200px', objectFit: 'cover' }}
-              />
-              <div className="card-body">
-                <h5 className="card-title">{blog.title}</h5>
-                <p className="card-text">{blog.description.slice(0, 100)}...</p>
-                <Link href={`/admin/blogs/${blog._id}`} passHref>
-                  <button className="btn btn-primary">View Blog</button>
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))}
+       {blogs.map((blog) => (
+  <div className="col-md-4 mb-4" key={blog._id}>
+    <div className="card shadow-sm border-light rounded">
+      <img
+        src={`/uploads/food/${blog.thumb}`}
+        alt={blog.title}
+        className="card-img-top"
+        style={{ height: '200px', objectFit: 'cover' }}
+      />
+      <div className="card-body">
+        <h5 className="card-title">{blog.title}</h5>
+        <p className="card-text">{blog.description.slice(0, 100)}...</p>
+        <Link href={`/admin/blogs/${blog._id}`} passHref>
+          <button className="btn btn-primary me-2">View Blog</button>
+        </Link>
+        <button
+          className="btn btn-danger"
+          onClick={() => handleDelete(blog._id)}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+))}
+
       </div>
 
       <hr />

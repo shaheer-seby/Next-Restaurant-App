@@ -31,7 +31,7 @@ const CategoryDetailPage = () => {
     <div className="container my-5">
       <h1>{category.title}</h1>
       <img
-        src={category.thumb}
+        src= {`/uploads/foods/${category.thumb}`}
         alt={category.title}
         className="img-fluid mb-3"
       />
@@ -44,7 +44,7 @@ const CategoryDetailPage = () => {
             <Link href={`/admin/foods/edit/${item._id}`} className="text-decoration-none text-dark">
               <div className="card h-100 shadow-sm">
                 <img
-                  src={item.image}
+                 src= {`/uploads/foods/${item.thumb}`}
                   className="card-img-top"
                   alt={item.title}
                   style={{ height: '200px', objectFit: 'cover' }}

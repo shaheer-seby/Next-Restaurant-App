@@ -67,7 +67,8 @@ const CategoryDetailPage = ({ category, items }) => {
             }}
           >
             <img
-              src={item.thumb || 'https://via.placeholder.com/400x250'}
+  src={`/uploads/foods/${item.thumb}` || 'https://via.placeholder.com/400x250'}
+
               alt={item.title}
               style={{
                 width: "100%",

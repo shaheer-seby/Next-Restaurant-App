@@ -11,12 +11,33 @@ export default function EditFoodPage() {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
+  const [categories, setCategories] = useState([]);
   const [thumb, setThumb] = useState(null);
   const [oldThumb, setOldThumb] = useState('');
   const [featured, setFeatured] = useState(false);
   const [active, setActive] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Fetch categories
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch('/api/categories');
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+        } else {
+          console.error('Failed to fetch categories');
+        }
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    }
+
+    fetchCategories();
+  }, []);
+
+  // Fetch existing food data
   useEffect(() => {
     if (!id) return;
 
@@ -28,7 +49,7 @@ export default function EditFoodPage() {
         setTitle(data.title);
         setPrice(data.price);
         setDescription(data.description);
-        setCategory(data.category);
+        setCategory(data.type); // assuming `type` holds category title
         setOldThumb(data.thumb);
         setFeatured(data.featured || false);
         setActive(data.active || false);
@@ -49,7 +70,7 @@ export default function EditFoodPage() {
     formData.append('title', title);
     formData.append('price', price);
     formData.append('description', description);
-    formData.append('category', category);
+    formData.append('type', category);
     formData.append('oldThumb', oldThumb);
     formData.append('featured', featured ? 'on' : 'off');
     formData.append('active', active ? 'on' : 'off');
@@ -69,7 +90,7 @@ export default function EditFoodPage() {
     }
   };
 
-  if (loading) return <><Navbar /><div>Loading...</div></>;
+  if (loading) return <><Navbar /><div className="container mt-5">Loading...</div></>;
 
   return (
     <>
@@ -109,14 +130,21 @@ export default function EditFoodPage() {
           </div>
           <div className="mb-3">
             <label className="form-label">Category:</label>
-            <input
-              type="text"
-              className="form-control"
+            <select
+              className="form-select"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               required
-            />
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.title}>
+                  {cat.title}
+                </option>
+              ))}
+            </select>
           </div>
+
           <div className="mb-4">
             <label className="form-label">Thumbnail:</label>
             {oldThumb && (

@@ -1,5 +1,5 @@
 // pages/admin/foods/add.js
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import Navbar from '../../components/navbar';
 
@@ -7,36 +7,55 @@ export default function AddFoodPage() {
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
-  const [Type, setType] = useState('');
+  const [type, setType] = useState('');
   const [thumb, setThumb] = useState(null);
   const [featured, setFeatured] = useState(false);
   const [active, setActive] = useState(false);
+  const [categories, setCategories] = useState([]);
   const router = useRouter();
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
+  // Fetch categories on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch('/api/categories');
+        if (res.ok) {
+          const data = await res.json();
+          setCategories(data);
+        } else {
+          console.error('Failed to fetch categories');
+        }
+      } catch (err) {
+        console.error('Error fetching categories:', err);
+      }
+    };
 
-  const formData = new FormData();
-  formData.append('title', title);
-  formData.append('price', price);
-  formData.append('description', description);
-  formData.append('type', Type);
-  formData.append('thumb', thumb);
-  formData.append('featured', featured ? 'on' : 'off');
-  formData.append('active', active ? 'on' : 'off');
+    fetchCategories();
+  }, []);
 
-  const response = await fetch('/api/foods', {
-    method: 'POST',
-    body: formData,
-  });
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
 
-  if (response.ok) {
-    router.push('/admin/foods');
-  } else {
-    alert('Failed to add food item');
-  }
-};
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('price', price);
+    formData.append('description', description);
+    formData.append('type', type);
+    formData.append('thumb', thumb);
+    formData.append('featured', featured ? 'on' : 'off');
+    formData.append('active', active ? 'on' : 'off');
 
+    const response = await fetch('/api/foods', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (response.ok) {
+      router.push('/admin/foods');
+    } else {
+      alert('Failed to add food item');
+    }
+  }, [title, price, description, type, thumb, featured, active, router]);
 
   return (
     <>
@@ -54,6 +73,7 @@ export default function AddFoodPage() {
               required
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label">Price:</label>
             <input
@@ -64,6 +84,7 @@ export default function AddFoodPage() {
               required
             />
           </div>
+
           <div className="mb-3">
             <label className="form-label">Description:</label>
             <textarea
@@ -74,16 +95,24 @@ export default function AddFoodPage() {
               rows={4}
             />
           </div>
+
           <div className="mb-3">
-            <label className="form-label">Type:</label>
-            <input
-              type="text"
-              className="form-control"
-              value={Type}
+            <label className="form-label">Category:</label>
+            <select
+              className="form-select"
+              value={type}
               onChange={(e) => setType(e.target.value)}
               required
-            />
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.title}>
+                  {cat.title}
+                </option>
+              ))}
+            </select>
           </div>
+
           <div className="mb-4">
             <label className="form-label">Thumbnail:</label>
             <input

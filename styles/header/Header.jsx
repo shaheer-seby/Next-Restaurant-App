@@ -79,7 +79,7 @@ const Header = () => {
           id="navbarNav"
         >
           <ul className="navbar-nav me-auto">
-            {['/home/categories', '/food', '/order', '/reservations', '/blogs', '/contact'].map(
+            {['/category', '/food', '/order', '/reservations', '/blogs', '/contact'].map(
               (path, idx) => {
                 const labels = ['Categories', 'Food', 'Order', 'Book', 'Blogs', 'Contact'];
                 return (
