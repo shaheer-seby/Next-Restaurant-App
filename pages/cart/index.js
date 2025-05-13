@@ -7,9 +7,9 @@ function CartPage() {
   const total = cart.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   const dummyItems = [
-    { id: 1, name: 'Wireless Headphones', price: 79.99 },
-    { id: 2, name: 'Smart Watch', price: 129.99 },
-    { id: 3, name: 'Bluetooth Speaker', price: 49.99 },
+    { name: 'Wireless Headphones', price: 79.99 },
+    { name: 'Smart Watch', price: 129.99 },
+    { name: 'Bluetooth Speaker', price: 49.99 },
   ];
 
   return (
@@ -73,7 +73,7 @@ function CartPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             {cart.cartItems.map((item) => (
               <div
-                key={item.id}
+                key={item.name}
                 style={{
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -151,6 +151,18 @@ function CartPage() {
         >
           Total: ${total.toFixed(2)}
         </div>
+        <Link href="/order" style={{
+            display: "inline-block",
+            padding: "12px 24px",
+            backgroundColor: "#22c55e",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius: "10px",
+            textDecoration: "none",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
+          }}>
+            <i className="fas fa-shopping-cart" style={{ marginRight: "8px" }}></i> Place Order
+          </Link>
       </div>
     </div>
   );

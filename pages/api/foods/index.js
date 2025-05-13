@@ -2,6 +2,7 @@ import multer from 'multer';
 import fs from 'fs';
 
 import { connectToDatabase } from '@/lib/db';
+import { stripe } from '../../../lib/stripe';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -46,11 +47,20 @@ export default async function handler(req, res) {
       if (err) {
         return res.status(500).json({ message: 'File upload error', error: err });
       }
-
+    
       const { title, price, featured, active, type, description } = req.body;
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+    const product = await stripe.products.create({
+      name: title,
+    default_price_data : 
+{unit_amount: price * 100,
+currency: 'pkr'},
+    images: ['none'] //add imgurl
+    });
       const newFood = {
         title,
         price: Number(price),
+        prod_id : product.id,
        featured: featured === 'on' ? 'on' : 'off',
 active: active === 'on' ? 'on' : 'off',
 

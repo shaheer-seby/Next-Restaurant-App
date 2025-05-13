@@ -2,7 +2,7 @@
 export async function getServerSideProps() {
   return {
     redirect: {
-      destination: '/login',
+      destination: '/auth',
       permanent: false, // Set to true if this is a permanent redirect
     },
   };
