@@ -161,24 +161,9 @@ const SingleFood = () => {
           <li><strong>Rating:</strong> <Rating rating={food.rating} /> ({food.totalReviews})</li>
           <li><strong>Status:</strong> {food.active === "on" ? "Available" : "Unavailable"}</li>
         </ul>
-<button
-                    onClick={() => cart.addItem({id:1, name:'hi',price:1000})}
-                    style={{
-                      width: '2.5rem',
-                      height: '2.5rem',
-                      borderRadius: '9999px',
-                      backgroundColor: '#ffedd5',
-                      color: '#059669',
-                      fontWeight: '700',
-                      fontSize: '1.25rem',
-                      border: 'none',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    +
-                  </button>
+
         {food.active === "on" ? (
-          <Link href={`/food/${food._id}`} style={{
+          <button onClick={() => cart.addItem({name: food.title,price:food.price, prod_id: food.prod_id})} style={{
             display: "inline-block",
             padding: "12px 24px",
             backgroundColor: "#22c55e",
@@ -189,7 +174,7 @@ const SingleFood = () => {
             boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
           }}>
             <i className="fas fa-shopping-cart" style={{ marginRight: "8px" }}></i> Add To Cart
-          </Link>
+          </button>
         ) : (
           <span style={{
             display: "inline-block",

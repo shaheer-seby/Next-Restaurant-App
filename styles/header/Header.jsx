@@ -6,8 +6,10 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Layout from '@/components/layout/layout';
 
 const Header = () => {
+
   const [scrolled, setScrolled] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [openProfile, setOpenProfile] = useState(false);
@@ -90,8 +92,13 @@ const Header = () => {
                   </li>
                 );
               }
-            )}
+            )
+}
           </ul>
+<Layout></Layout>
+
+
+
 
           <ul className="navbar-nav align-items-center">
             <li className="nav-item position-relative" ref={profileRef}>
@@ -127,6 +134,7 @@ const Header = () => {
                           Logout
                         </button>
                       </li>
+                      
                     </>
                   ) : (
                     <li>

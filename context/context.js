@@ -18,17 +18,18 @@ export function CartContextProvider(props) {
   const [phone,setPhone] = useState();
   function set(id,add,pho)
   {
+    console.log('details: ',id,add,pho)
     setUserId(id);
     setAddress(add);
     setPhone(pho)
   }
   function add(item) {
-    console.log(item)
+    console.log('item: ',item)
     setCart((prevCart) => {
-      const existingItem = prevCart.find((i) => i.id === item.id);
+      const existingItem = prevCart.find((i) => i.name === item.name);
       if (existingItem) {
         return prevCart.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.name === item.name ? { ...i, quantity: i.quantity + 1 } : i
         );
       } else {
         return [...prevCart, { ...item, quantity: 1 }];
@@ -39,14 +40,14 @@ console.log(cart)
 
   function del(item) {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((i) => i.id === item.id);
+      const existingItem = prevCart.find((i) => i.name === item.name);
       if (!existingItem) return prevCart;
 
       if (existingItem.quantity === 1) {
-        return prevCart.filter((i) => i.id !== item.id);
+        return prevCart.filter((i) => i.name !== item.name);
       } else {
         return prevCart.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity - 1 } : i
+          i.name === item.name ? { ...i, quantity: i.quantity - 1 } : i
         );
       }
     });

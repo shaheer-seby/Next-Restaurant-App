@@ -1,10 +1,9 @@
 import { useState, useRef,useContext } from 'react';
-import classes from './auth-form.module.css';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import CartContext from "@/context/context";
 import { useSession } from 'next-auth/react';
-
+import styles from './loginStyles';
 
 async function createUser(email, password, name, phone, address) {
   try {
@@ -97,15 +96,16 @@ const { data: session } = useSession();
         email: email,
         password: pass,
       });
+alert('Signed In')
       if (!result.error) {
          setTimeout(() => {
     if (session?.user) {
       cartCtx.setUser(session.user.id, session.user.address, session.user.phone);
     
-      router.replace('/');
+      router.replace('/home');
     }
   }, 100); 
-        router.replace('/');
+        router.replace('/auth');
       }
 else{
       return alert(result.error)}
@@ -113,46 +113,68 @@ else{
   }
 
   return (
-    <section className={classes.auth}>
-      <h1>{isLogin ? 'Login' : 'Sign Up'}</h1>
-      <form onSubmit={submitHandler}>
+  <div style={styles.container}>
+    <div style={styles.card}>
+      <h1 style={styles.heading}>FastFoods</h1>
+      <img src="/food.png" alt="avatar" style={styles.avatar} />
+
+      <form onSubmit={submitHandler} style={styles.form}>
         {!isLogin && (
           <>
-            <div className={classes.control}>
-              <label htmlFor='name'>Your Name</label>
-              <input type='text' id='name' required ref={nref} />
-            </div>
-            <div className={classes.control}>
-              <label htmlFor='phone'>Phone Number</label>
-              <input type='tel' id='phone' required ref={phref} />
-            </div>
-            <div className={classes.control}>
-              <label htmlFor='address'>Address</label>
-              <input type='text' id='address' required ref={aref} />
-            </div>
+            <input
+              type="text"
+              placeholder="Your Name"
+              required
+              ref={nref}
+              style={styles.input}
+            />
+            <input
+              type="tel"
+              placeholder="Phone Number"
+              required
+              ref={phref}
+              style={styles.input}
+            />
+            <input
+              type="text"
+              placeholder="Address"
+              required
+              ref={aref}
+              style={styles.input}
+            />
           </>
         )}
-        <div className={classes.control}>
-          <label htmlFor='email'>Your Email</label>
-          <input type='email' id='email' required ref={eref} />
-        </div>
-        <div className={classes.control}>
-          <label htmlFor='password'>Your Password</label>
-          <input type='password' id='password' required ref={pref} />
-        </div>
 
-        <div className={classes.actions}>
-          <button>{isLogin ? 'Login' : 'Create Account'}</button>
-          <button
-            type='button'
-            className={classes.toggle}
-            onClick={switchAuthModeHandler}
-          >
-            {isLogin ? 'Create new account' : 'Login with existing account'}
-          </button>
-        </div>
+        <input
+          type="email"
+          placeholder="Email"
+          required
+          ref={eref}
+          style={styles.input}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          ref={pref}
+          style={styles.input}
+        />
+
+        <button type="submit" style={styles.buttonPrimary}>
+          {isLogin ? 'Login' : 'Create Account'}
+        </button>
+
+        <button
+          type="button"
+          onClick={switchAuthModeHandler}
+          style={styles.buttonSecondary}
+        >
+          {isLogin ? 'Create new account' : 'Login with existing account'}
+        </button>
       </form>
-    </section>
+    </div>
+  </div>
+
   );
 }
 

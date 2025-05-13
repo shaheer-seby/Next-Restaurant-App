@@ -15,7 +15,7 @@ export default function AddFoodPage() {
 
  const handleSubmit = async (e) => {
   e.preventDefault();
-
+  
   const formData = new FormData();
   formData.append('title', title);
   formData.append('price', price);
