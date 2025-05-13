@@ -95,27 +95,38 @@ export default async function handler(req, res) {
   }
 
   // --- DELETE (Delete category & related foods) ---
-  if (req.method === 'DELETE') {
-    try {
-      const category = await db.collection('categories').findOne({ _id: new ObjectId(id) });
+ if (req.method === 'DELETE') {
+  const { type } = req.query;
 
-      if (!category) {
-        return res.status(404).json({ message: 'Category not found' });
-      }
+  try {
+    if (type === 'category') {
+      // Delete a category and its related food items
+      const category = await db.collection('categories').findOne({ _id: new ObjectId(id) });
+      if (!category) return res.status(404).json({ message: 'Category not found' });
 
       const categoryTitle = category.title;
-      console.log('Category Title:', categoryTitle);
 
       await db.collection('categories').deleteOne({ _id: new ObjectId(id) });
-      const deleteResult = await db.collection('foods').deleteMany({ type: categoryTitle });
+      const foodResult = await db.collection('foods').deleteMany({ type: categoryTitle });
 
       return res.status(200).json({
-        message: `Category and ${deleteResult.deletedCount} associated food items deleted.`,
+        message: `Category deleted. ${foodResult.deletedCount} food items also deleted.`,
       });
-    } catch (error) {
-      return res.status(500).json({ message: 'Delete error', error: error.message });
+    } else {
+      // Delete a single food item
+      const result = await db.collection('foods').deleteOne({ _id: new ObjectId(id) });
+
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: 'Food item not found' });
+      }
+
+      return res.status(200).json({ message: 'Food item deleted successfully' });
     }
+  } catch (error) {
+    return res.status(500).json({ message: 'Delete error', error: error.message });
   }
+}
+
 
   // --- Method Not Allowed ---
   return res.status(405).json({ message: 'Method Not Allowed' });

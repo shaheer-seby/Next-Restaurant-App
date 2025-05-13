@@ -21,6 +21,7 @@ export default function AdminLogin() {
     const data = await response.json();
 
     if (response.ok) {
+      localStorage.setItem('userId', data.user._id);
       router.push('/admin');
     } else {
       setError(data.message || 'An error occurred during login.');

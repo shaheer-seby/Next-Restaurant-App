@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Layout from '@/components/layout/layout';
+import { signOut } from 'next-auth/react';
 
 const Header = () => {
 
@@ -44,10 +45,11 @@ const Header = () => {
   }, [customerId]);
 
   const logout = () => {
-    Cookies.remove('customer');
-    Cookies.remove('customerName');
-    router.push('/');
-  };
+  signOut({
+    callbackUrl: '/', // or any page you want the user to go after logout
+  });
+};
+
 
   const linkColor = scrolled ? 'text-dark' : 'text-white';
   const iconFilter = scrolled ? 'invert(0)' : 'invert(1)';
@@ -95,7 +97,12 @@ const Header = () => {
             )
 }
           </ul>
+          
+          <button onClick={logout} className="btn btn-danger">
+            logout
+          </button>
 <Layout></Layout>
+
 
 
 

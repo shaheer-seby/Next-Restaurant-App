@@ -12,6 +12,7 @@ export default function FoodsPage() {
       try {
         const response = await fetch('/api/foods');
         const data = await response.json();
+        
         setFoods(data);
         setLoading(false);
       } catch (error) {

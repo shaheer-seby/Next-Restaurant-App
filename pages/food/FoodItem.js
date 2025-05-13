@@ -57,7 +57,7 @@ const FoodItem = ({ foods }) => {
                   <Link href={`/food/${item._id}`} className="btn-primary">
                     <i className="fas fa-eye"></i> View Detail
                   </Link>
-                  {item.active === "on" ? (
+                  {/* {item.active === "on" ? (
                     <button className="btn-primary">
                       <i className="fas fa-shopping-cart"></i> Add To Cart
                     </button>
@@ -65,7 +65,7 @@ const FoodItem = ({ foods }) => {
                     <button className="btn-primary disableLink" disabled>
                       <i className="fas fa-shopping-cart"></i> Stock Out
                     </button>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>

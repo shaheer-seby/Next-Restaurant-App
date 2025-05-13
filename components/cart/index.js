@@ -12,7 +12,30 @@ function CartPage() {
     alert("Please enter both address and phone number.");
     return;
   }
-  console.log(cart.cartItems)
+  
+if (cart.cartItems.length > 0) {
+        fetch('/api/orders/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: cart.cartItems,
+            customer_id: cart.uid,
+            address: cart.address,
+            phone: cart.phone,
+          
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log('Order saved:', data);
+          })
+          .catch((err) => {
+            console.error('Error saving order:', err);
+          });
+      }
+  console.log("cart folder",cart.cartItems)
   const line_items = cart.cartItems.map(item => ({
     price: item.prod_id, // assumes each item has a valid `stripePriceId`
     quantity: item.quantity,

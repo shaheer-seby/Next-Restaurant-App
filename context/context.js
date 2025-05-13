@@ -1,6 +1,6 @@
 import { createContext, useState } from 'react';
 
-const CartContext = createContext({
+export const CartContext = createContext({
   cartItems: [],
   addItem: (item) => {},
   deleteItem: (item) => {},
@@ -24,7 +24,7 @@ export function CartContextProvider(props) {
     setPhone(pho)
   }
   function add(item) {
-    console.log('item: ',item)
+    console.log('context folder item: ',item)
     setCart((prevCart) => {
       const existingItem = prevCart.find((i) => i.name === item.name);
       if (existingItem) {

@@ -1,43 +1,18 @@
-// pages/api/orders/index.js
 import { connectToDatabase } from '@/lib/db';
-import multer from 'multer';
-import fs from 'fs';
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = 'uploads/orders';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const name = Date.now() + '-' + file.originalname;
-    cb(null, name);
-  },
-});
-
-const upload = multer({ storage: storage }).single('thumb');
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
   const { db } = await connectToDatabase();
 
-    // allow localhost:3001 for quick testing
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-  
-    // Handle preflight request
-    if (req.method === 'OPTIONS') {
-      return res.status(200).end();
-    }
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
   if (req.method === 'GET') {
     try {
@@ -46,43 +21,52 @@ export default async function handler(req, res) {
     } catch (error) {
       res.status(500).json({ message: 'Error fetching orders', error: error.message });
     }
-  } else if (req.method === 'POST') {
-    upload(req, res, async function (err) {
-      if (err) {
-        return res.status(500).json({ message: 'File upload error', error: err.message });
+  }
+
+  else if (req.method === 'POST') {
+    try {
+      console.log('Request body inside post orders:', req.body);
+      const { items, customer_id, name, email, address, phone } = req.body;
+
+      if (!items || !Array.isArray(items) || items.length === 0) {
+        return res.status(400).json({ message: 'Invalid order items.' });
       }
 
-      const {
-        orderID, customer_id, customer_name, items,
-        total_foods, total_quantity, deliveryCost,
-        total_price, email, phone, city, address, payment
-      } = req.body;
+      const total_quantity = items.reduce((sum, item) => sum + item.quantity, 0);
+      const total_price = items.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
-      const newOrder = {
-        orderID,
-        customer_id,
-        customer_name,
-        items: JSON.parse(items),
-        total_foods: Number(total_foods),
-        total_quantity: Number(total_quantity),
-        deliveryCost: Number(deliveryCost),
-        total_price: Number(total_price),
-        email,
-        phone,
-        city,
-        address,
-        payment,
-        thumb: req.file?.filename || null
+      const order = {
+        orderID: `ORD-${Date.now()}`,
+        customer_id: customer_id || null,
+        customer_name: name || 'Guest',
+        items,
+        total_foods: items.length,
+        total_quantity,
+        deliveryCost: 0,
+        total_price,
+        email: email || null,
+        phone: phone || null,
+        city: null,
+        address: address || null,
+        payment: 'Stripe',
+        thumb: null,
+        createdAt: new Date()
       };
 
-      try {
-        await db.collection('orders').insertOne(newOrder);
-        res.status(200).json({ message: 'Order placed successfully.' });
-      } catch (error) {
-        res.status(500).json({ message: `Error: ${error.message}` });
-      }
-    });
-  } else {
+      const result = await db.collection('orders').insertOne(order);
+
+      // Return the order ID for frontend to fetch later
+      res.status(201).json({
+        message: 'Order placed successfully.',
+        orderId: result.insertedId.toString(), // make sure it's string for fetch
+      });
+
+    } catch (error) {
+      res.status(500).json({ message: `Error placing order`, error: error.message });
+    }
+  }
+
+  else {
     res.status(405).json({ message: 'Method Not Allowed' });
   }
 }

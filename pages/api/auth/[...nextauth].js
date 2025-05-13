@@ -4,6 +4,8 @@ import { MongoClient } from 'mongodb';
 import CartContext from '@/context/context';
 import bcrypt from "bcryptjs";
 import { useContext } from 'react';
+import { signOut } from 'next-auth/react';
+
 
 export default NextAuth.default({
     debug: true,

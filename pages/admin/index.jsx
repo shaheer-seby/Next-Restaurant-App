@@ -12,9 +12,7 @@ const Dashboard = () => {
     totalCategories: 0,
     totalBlogs: 0,
     totalCustomers: 0,
-    totalDeliveryRiders: 0,
-    totalManagers: 0,
-    totalMessages: 0,
+ 
   });
   const [loading, setLoading] = useState(true);
 
@@ -79,21 +77,7 @@ const Dashboard = () => {
       icon: "ri-map-pin-user-fill",
       count: loading ? "0" : `${dashboardData.totalCustomers}+`,
     },
-    {
-      title: "Delivery Riders",
-      icon: "ri-truck-line",
-      count: loading ? "0" : `${dashboardData.totalDeliveryRiders}+`,
-    },
-    {
-      title: "Managers",
-      icon: "ri-team-line",
-      count: loading ? "0" : `${dashboardData.totalManagers}+`,
-    },
-    {
-      title: "Messages",
-      icon: "ri-chat-2-line",
-      count: loading ? "0" : `${dashboardData.totalMessages}+`,
-    },
+ 
   ];
 
   return (

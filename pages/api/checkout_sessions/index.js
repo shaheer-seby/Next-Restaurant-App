@@ -30,7 +30,7 @@ for (let i = 0; i < line_items.length; i++) {
     const session = await stripe.checkout.sessions.create({
       line_items,
       mode: 'payment',
-      success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `http://localhost:3000/success`,
       cancel_url: `http://localhost:3000/?canceled=true`,
       metadata: {
         address,
