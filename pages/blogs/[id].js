@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import Banner from '../../styles/banner/Banner'; // Adjust path if needed
+import Banner from '../../styles/banner/Banner'; 
 
 const SingleBlog = () => {
   const { query } = useRouter();
@@ -57,8 +57,8 @@ const SingleBlog = () => {
             </div>
             <div className="col-md-4 text-center">
               <img
-                src={`/blogs/${blog.thumb}`}
-                alt={blog.title}
+               src={`/uploads/food/${blog.thumb}`}
+        alt={blog.title}
                 className="img-fluid rounded shadow-sm"
                 style={{ maxHeight: '200px', objectFit: 'cover', width: '100%' }}
               />

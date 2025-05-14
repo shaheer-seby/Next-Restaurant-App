@@ -1,4 +1,4 @@
-// File: /pages/api/checkout_sessions.js
+
 
 import { stripe } from '../../../lib/stripe';
 
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
 for (let i = 0; i < line_items.length; i++) {
   const prices = await stripe.prices.list({
-    product: line_items[i].price, // 'price' here is actually a product ID like 'prod_ABC123'
+    product: line_items[i].price, 
     active: true,
     limit: 1,
   });
@@ -22,7 +22,7 @@ for (let i = 0; i < line_items.length; i++) {
     throw new Error(`No active price found for product ${line_items[i].price}`);
   }
 
-  line_items[i].price = prices.data[0].id; // Replace with actual price ID
+  line_items[i].price = prices.data[0].id; 
 }
 
     console.log('line items: ',line_items)

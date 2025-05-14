@@ -78,7 +78,7 @@ function CartPage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  backgroundColor: '#f9f0f2', // Soft skin tone background
+                  backgroundColor: '#f9f0f2', 
                   padding: '1rem',
                   borderRadius: '1.25rem',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
@@ -103,7 +103,7 @@ function CartPage() {
                       width: '2.5rem',
                       height: '2.5rem',
                       borderRadius: '9999px',
-                      backgroundColor: '#ffb3b3', // Soft pink background
+                      backgroundColor: '#ffb3b3', 
                       color: '#dc2626',
                       fontWeight: '700',
                       fontSize: '1.25rem',
@@ -120,7 +120,7 @@ function CartPage() {
                       width: '2.5rem',
                       height: '2.5rem',
                       borderRadius: '9999px',
-                      backgroundColor: '#fff0e6', // Light peach
+                      backgroundColor: '#fff0e6', 
                       color: '#4caf50',
                       fontWeight: '700',
                       fontSize: '1.25rem',
@@ -141,7 +141,7 @@ function CartPage() {
             marginTop: '3rem',
             textAlign: 'right',
             padding: '1.5rem',
-            backgroundColor: '#fff5e6', // Soft peach background for total
+            backgroundColor: '#fff5e6', 
             borderRadius: '1rem',
             fontSize: '1.5rem',
             fontWeight: '700',

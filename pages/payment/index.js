@@ -2,13 +2,7 @@ import { useContext, useEffect } from 'react';
 import CartContext from '@/context/context';
 
 function IndexPage() {
-  //const { canceled } = await searchParams
 
-  // if (canceled) {
-  //   console.log(
-  //     'Order canceled -- continue to shop around and checkout when you’re ready.'
-  //   )
-  // }
   const cart = useContext(CartContext);
     console.log('Cart context:', cart);
     

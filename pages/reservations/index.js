@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Banner from "../../styles/banner/Banner"; // Adjust path based on your project
+import Banner from "../../styles/banner/Banner"; 
 
 const Reservations = () => {
   const [reservation, setReservation] = useState({
@@ -34,8 +34,8 @@ const Reservations = () => {
         phone: reservation.phone,
         date: reservation.date,
         time: reservation.time,
-        guests: reservation.people, // ✅ rename to match backend
-        notes: '', // Optional, or add notes field to form
+        guests: reservation.people,
+        notes: '', 
       }),
     });
 

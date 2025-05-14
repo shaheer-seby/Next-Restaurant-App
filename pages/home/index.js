@@ -1,4 +1,4 @@
-// pages/home.js
+
 import React, { useContext} from "react";
 import Link from "next/link";
 import HeroBanner from "./HeroBanner";

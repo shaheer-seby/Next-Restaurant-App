@@ -83,9 +83,9 @@ const Header = () => {
           id="navbarNav"
         >
           <ul className="navbar-nav me-auto">
-            {['/category', '/food', '/order', '/reservations', '/blogs', '/contact'].map(
+            {['/category', '/food', '/reservations', '/blogs', '/contact'].map(
               (path, idx) => {
-                const labels = ['Categories', 'Food', 'Order', 'Book', 'Blogs', 'Contact'];
+                const labels = ['Categories', 'Food', 'Book', 'Blogs', 'Contact'];
                 return (
                   <li className="nav-item" key={idx}>
                     <Link className={`nav-link ${linkColor}`} href={path}>

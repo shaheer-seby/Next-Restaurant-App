@@ -22,7 +22,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage }).single('thumb');
 
-// Disable body parser
 export const config = {
   api: {
     bodyParser: false,
@@ -33,7 +32,7 @@ export default async function handler(req, res) {
   const { db } = await connectToDatabase();
   const id = req.query.id;
 
-  // CORS setup (optional)
+ 
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -47,7 +46,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: 'Invalid user ID' });
   }
 
-  // GET USER BY ID
+
   if (req.method === 'GET') {
     try {
 
@@ -63,7 +62,7 @@ console.log(user);
     }
   }
 
-  // UPDATE USER
+ 
   else if (req.method === 'PUT') {
     upload(req, res, async (err) => {
       if (err) {
@@ -90,7 +89,7 @@ console.log(user);
           address,
         };
 
-        // Password update (with bcrypt)
+       
         if (oldPassword && newPassword) {
           const passwordMatch = await bcrypt.compare(oldPassword, user.password);
           if (!passwordMatch) {
@@ -100,7 +99,7 @@ console.log(user);
           updateFields.password = hashedPassword;
         }
 
-        // OPTIONAL: If you want to keep file support in future
+        
         if (req.file) {
           updateFields.thumb = `/uploads/users/${req.file.filename}`;
         }

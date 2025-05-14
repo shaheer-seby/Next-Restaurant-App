@@ -40,7 +40,7 @@ callbacks: {
         const client = await MongoClient.connect(process.env.MONGODB_URI);
         const db = client.db();
         const user = await db.collection("users").findOne({ email: credentials.email });
-        // const cart= useContext(CartContext);
+      
 
         if (!user) {
           throw new Error('No user found');
@@ -49,7 +49,7 @@ callbacks: {
           if (!isValid) {
             throw new Error('Invalid password');
           }
-          // cart.setUser(user._id,user.address,user.phone)
+          
           console.log('user',user)
 
           return {

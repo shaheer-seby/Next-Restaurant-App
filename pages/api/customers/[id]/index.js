@@ -1,4 +1,4 @@
-// pages/api/customer/[id].js
+
 import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
@@ -26,13 +26,11 @@ const upload = multer({ storage: storage }).single('thumb');
 
 export default async function handler(req, res) {
 
-    // allow localhost:3001 for quick testing
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
   
-    // Handle preflight request
     if (req.method === 'OPTIONS') {
       return res.status(200).end();
     }
@@ -76,7 +74,7 @@ export default async function handler(req, res) {
         }
 
         if (req.file) {
-          // delete old thumb
+        
           if (existingCustomer.thumb && fs.existsSync(`uploads/customers/${existingCustomer.thumb}`)) {
             fs.unlinkSync(`uploads/customers/${existingCustomer.thumb}`);
           }

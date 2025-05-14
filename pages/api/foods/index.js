@@ -55,7 +55,7 @@ export default async function handler(req, res) {
     default_price_data : 
 {unit_amount: price * 100,
 currency: 'pkr'},
-    images: ['none'] //add imgurl
+    images: ['none']
     });
       const newFood = {
         title,

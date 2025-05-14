@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import axios from "axios"; // Using simple axios
+import axios from "axios"; 
 import Navbar from "./components/navbar";
 
 const Dashboard = () => {

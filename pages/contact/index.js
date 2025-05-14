@@ -1,4 +1,4 @@
-"use client"; // if using app/ directory
+"use client"; 
 
 import React from "react";
 import Link from "next/link";
@@ -40,23 +40,9 @@ const Contact = () => {
               </div>
             </div>
 
-            <form>
-              <div className="flexSB">
-                <input type="text" placeholder="Name" required />
-                <input type="email" placeholder="Email" required />
-              </div>
-              <input type="text" placeholder="Subject" required />
-              <input type="tel" placeholder="Phone" required />
-              <textarea
-                cols="30"
-                rows="10"
-                placeholder="Type messages...."
-                required
-              ></textarea>
-              <input type="submit" value="SEND MESSAGE" className="btn-primary" />
-            </form>
+           
 
-            <h3>Follow Us</h3>
+            <h3>Follow Us at instagram: FastFoods</h3>
             <div className="social">
               <Link href="#"><i className="fab fa-facebook-f icon facebook"></i></Link>
               <Link href="#"><i className="fab fa-instagram icon instagram"></i></Link>

@@ -4,12 +4,12 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
-        {/* Logo or Title */}
+        
         <Link href="/" className="navbar-brand">
           Admin Panel
         </Link>
         
-        {/* Toggle button for mobile */}
+        
         <button
           className="navbar-toggler"
           type="button"
@@ -22,7 +22,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         
-        {/* Navigation Links */}
+    
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
@@ -30,11 +30,7 @@ const Navbar = () => {
                 Dashboard
               </Link>
             </li>
-            {/* <li className="nav-item">
-              <Link href="/admin/deliveryboy" className="nav-link">
-                Delivery Boy
-              </Link>
-            </li> */}
+           
             <li className="nav-item">
               <Link href="/admin/categories" className="nav-link">
                 Categories

@@ -1,7 +1,7 @@
 const styles = {
     container: {
       minHeight: "100vh",
-      backgroundColor: "#fce4ec", // light pink background
+      backgroundColor: "#fce4ec", 
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
@@ -11,7 +11,7 @@ const styles = {
       backgroundColor: "#ffffff",
       borderRadius: "12px",
       padding: "2rem",
-      boxShadow: "0 4px 12px rgba(142, 36, 170, 0.2)", // soft purple shadow
+      boxShadow: "0 4px 12px rgba(142, 36, 170, 0.2)", 
       maxWidth: "400px",
       width: "100%",
       textAlign: "center",
@@ -23,7 +23,7 @@ const styles = {
     },
     heading: {
       marginBottom: "1.5rem",
-      color: "#8e24aa", // deep purple
+      color: "#8e24aa", 
     },
     form: {
       display: "flex",

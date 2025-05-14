@@ -15,7 +15,7 @@ const SingleFood = () => {
 
   const mockFood = {
     _id: "1",
-    title: "Cheese Burst Pizza",
+    title: "PLEASE WAIT",
     description: "A cheesy delight with crispy crust and flavorful toppings.",
     price: 499,
     category: "Pizza",

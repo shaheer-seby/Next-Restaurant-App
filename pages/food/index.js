@@ -1,34 +1,15 @@
-'use client';
-
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PageHeader from "../../styles/header/title/PageHeader";
 import FoodItem from "./FoodItem";
 import "../../styles/food.module.css";
 import Banner from "../../styles/banner/Banner";
 
-const Food = () => {
+const Food = ({ foods = [] }) => {
   const [query, setQuery] = useState("");
-  const [foods, setFoods] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(`/api/foods`);
-        if (!res.ok) throw new Error("Failed to fetch foods");
-        const data = await res.json();
-        setFoods(data);
-      } catch (error) {
-        console.error("Error fetching food items:", error);
-        setFoods([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFoods();
-  }, [query]);
+  const filteredFoods = foods.filter((food) =>
+    food.title.toLowerCase().includes(query.toLowerCase())
+  );
 
   return (
     <>
@@ -48,15 +29,32 @@ const Food = () => {
           </div>
         </div>
         <div className="container">
-          {loading ? (
-            <p>Loading...</p>
+          {filteredFoods.length === 0 ? (
+            <p>No matching dishes found.</p>
           ) : (
-            <FoodItem foods={foods} />
+            <FoodItem foods={filteredFoods} />
           )}
         </div>
       </section>
     </>
   );
 };
+
+export async function getServerSideProps() {
+  try {
+    const res = await fetch("http://localhost:3000/api/foods");
+    const data = await res.json();
+    const foods = Array.isArray(data) ? data : [];
+
+    return {
+      props: { foods },
+    };
+  } catch (error) {
+    console.error("Failed to fetch food items:", error);
+    return {
+      props: { foods: [] },
+    };
+  }
+}
 
 export default Food;

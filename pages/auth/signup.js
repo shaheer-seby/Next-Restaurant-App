@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
     const db = client.db();
 
-    // Check if user already exists
+  
     const existingUser = await db.collection("users").findOne({ email: email });
 
     if (existingUser) {
@@ -29,7 +29,6 @@ export default async function handler(req, res) {
       return;
     }
 
-    // You should hash the password before saving it in production
     const result = await db.collection("users").insertOne({
       email,
       password,

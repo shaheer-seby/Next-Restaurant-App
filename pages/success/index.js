@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import confetti from 'canvas-confetti';
-
+import CartContext from '@/context/context';
 const SuccessPage = () => {
   const router = useRouter();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const cartCtx = useContext(CartContext);
 
   useEffect(() => {
     const fetchLatestOrder = async () => {
@@ -14,9 +15,10 @@ const SuccessPage = () => {
         const orders = await res.json();
 
         if (Array.isArray(orders) && orders.length > 0) {
-          const latestOrder = orders[0]; // sorted by createdAt descending in API
+          const latestOrder = orders[0]; 
           setOrder(latestOrder);
-          confetti(); // celebration animation
+          cartCtx.setUser(latestOrder.customer_id, latestOrder.address, latestOrder.phone);
+          confetti(); 
         } else {
           console.warn('No orders found');
         }
@@ -63,7 +65,7 @@ const SuccessPage = () => {
           <p>No recent order found.</p>
         )}
 
-        <button onClick={() => router.push('/')} className="btn btn-success mt-4">
+        <button onClick={() => router.push('/home')} className="btn btn-success mt-4">
           Back to Home
         </button>
       </div>

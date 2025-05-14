@@ -21,7 +21,7 @@ export default function OrdersPage() {
     setSelectedOrder(order);
     setFormData({ ...order });
 
-    // Show modal using Bootstrap JS
+  
     const modal = new bootstrap.Modal(document.getElementById('editModal'));
     modal.show();
   };
@@ -41,7 +41,7 @@ export default function OrdersPage() {
       }, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      // Hide modal
+     
       const modalEl = document.getElementById('editModal');
       const modal = bootstrap.Modal.getInstance(modalEl);
       modal.hide();
@@ -92,7 +92,7 @@ export default function OrdersPage() {
         ))}
       </div>
 
-      {/* Pure Bootstrap Modal */}
+     
       <div className="modal fade" id="editModal" tabIndex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div className="modal-dialog modal-lg">
           <div className="modal-content">

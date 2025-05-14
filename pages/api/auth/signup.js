@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ message: 'User already exists.' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12); // 12 salt rounds
+    const hashedPassword = await bcrypt.hash(password, 12); 
 
     await db.collection("users").insertOne({
       email,

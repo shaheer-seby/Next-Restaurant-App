@@ -34,14 +34,12 @@ const Blog = ({ blogs = [] }) => {
               currentItems.map((item) => (
                 <div className="items shadow" key={item._id}>
                   <div className="img">
-                    <img
-                      src={
-                        item.thumb.startsWith('http')
-                          ? item.thumb
-                          : `/blogs/${item.thumb}`
-                      }
-                      alt={item.title}
-                    />
+                   <img
+        src={`/uploads/food/${item.thumb}`}
+        alt={item.title}
+        className="card-img-top"
+        style={{ height: '200px', objectFit: 'cover' }}
+      />
                   </div>
                   <div className="text">
                     <div className="admin flexSB">
@@ -93,7 +91,7 @@ const Blog = ({ blogs = [] }) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   try {
     const res = await fetch('http://localhost:3000/api/blogs');
     const data = await res.json();
@@ -109,5 +107,6 @@ export async function getServerSideProps() {
     };
   }
 }
+
 
 export default Blog;

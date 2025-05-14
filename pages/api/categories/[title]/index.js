@@ -35,7 +35,7 @@ console.log('Category Title:', title);
         return res.status(404).json({ message: 'Category not found' });
       }
 
-      // Delete the category image (thumb)
+      
       if (category.thumb) {
         const imagePath = path.join(process.cwd(), 'public', 'uploads', 'food', category.thumb);
         if (fs.existsSync(imagePath)) {
@@ -43,7 +43,7 @@ console.log('Category Title:', title);
         }
       }
 
-      // Delete all foods with type === category.title
+    
       const foodsToDelete = await db.collection('foods').find({ type: title }).toArray();
 
       for (const food of foodsToDelete) {
@@ -57,7 +57,7 @@ console.log('Category Title:', title);
 
       await db.collection('foods').deleteMany({ type: title });
 
-      // Delete the category
+
       await db.collection('categories').deleteOne({ title });
 
       return res.status(200).json({ message: 'Category and associated foods deleted successfully' });

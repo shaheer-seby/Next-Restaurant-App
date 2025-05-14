@@ -14,7 +14,6 @@ export default function AddFoodPage() {
   const [categories, setCategories] = useState([]);
   const router = useRouter();
 
-  // Fetch categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
       try {

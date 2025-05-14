@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 export default async function handler(req, res) {
   const { db } = await connectToDatabase();
 
-  // CORS headers
+
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -55,10 +55,10 @@ export default async function handler(req, res) {
 
       const result = await db.collection('orders').insertOne(order);
 
-      // Return the order ID for frontend to fetch later
+     
       res.status(201).json({
         message: 'Order placed successfully.',
-        orderId: result.insertedId.toString(), // make sure it's string for fetch
+        orderId: result.insertedId.toString(), 
       });
 
     } catch (error) {

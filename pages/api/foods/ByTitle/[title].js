@@ -1,4 +1,4 @@
-// pages/api/foods/byTitle/[title].js
+
 
 import { connectToDatabase } from '@/lib/db';
 
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
     const items = await db
       .collection('foods')
-      .find({ type: title }) // match documents where category == title
+      .find({ type: title }) 
       .toArray();
 
     if (items.length === 0) {

@@ -56,7 +56,7 @@ const handleDelete = async (id) => {
     });
 
     if (response.ok) {
-      // Remove the deleted blog from the UI
+      
       setBlogs((prev) => prev.filter((blog) => blog._id !== id));
     } else {
       const errorData = await response.json();

@@ -101,7 +101,12 @@ if (cart.cartItems.length > 0) {
             Your cart is empty. Start adding items! 🧃
           </p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem',  display: 'flex',
+    flexDirection: 'column',
+    gap: '1.5rem',
+    maxHeight: '400px',
+    overflowY: 'auto',
+    paddingRight: '0.5rem'  }}>
             {cart.cartItems.map((item) => (
               <div
                 key={item.name}

@@ -22,7 +22,7 @@ const upload = multer({ storage: storage }).single('thumb');
 
 export const config = {
   api: {
-    bodyParser: false, // Required for multer
+    bodyParser: false,
   },
 };
 
@@ -30,16 +30,16 @@ export default async function handler(req, res) {
   const { db } = await connectToDatabase();
   const { id } = req.query;
 
-  // Allow CORS (optional for dev)
+ 
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-  // Handle preflight
+
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // --- GET (Fetch food by ID) ---
+
   if (req.method === 'GET') {
     try {
       const food = await db.collection('foods').findOne({ _id: new ObjectId(id) });
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     }
   }
 
-  // --- PUT (Update food item) ---
+
   if (req.method === 'PUT') {
     upload(req, res, async function (err) {
       if (err) {
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
         if (req.file) {
           const oldThumbPath = path.join('public/uploads/foods', oldThumb);
           if (fs.existsSync(oldThumbPath)) {
-            fs.unlinkSync(oldThumbPath); // Delete old image
+            fs.unlinkSync(oldThumbPath); 
           }
           updateData.thumb = req.file.filename;
         }
@@ -94,13 +94,13 @@ export default async function handler(req, res) {
     return;
   }
 
-  // --- DELETE (Delete category & related foods) ---
+ 
  if (req.method === 'DELETE') {
   const { type } = req.query;
 
   try {
     if (type === 'category') {
-      // Delete a category and its related food items
+      
       const category = await db.collection('categories').findOne({ _id: new ObjectId(id) });
       if (!category) return res.status(404).json({ message: 'Category not found' });
 
@@ -113,7 +113,7 @@ export default async function handler(req, res) {
         message: `Category deleted. ${foodResult.deletedCount} food items also deleted.`,
       });
     } else {
-      // Delete a single food item
+   
       const result = await db.collection('foods').deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 0) {
@@ -128,6 +128,6 @@ export default async function handler(req, res) {
 }
 
 
-  // --- Method Not Allowed ---
+
   return res.status(405).json({ message: 'Method Not Allowed' });
 }

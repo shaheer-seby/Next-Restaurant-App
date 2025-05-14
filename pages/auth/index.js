@@ -35,7 +35,7 @@ function AuthForm() {
   const cartCtx = useContext(CartContext);
 
   const [isLogin, setIsLogin] = useState(true);
-  const [role, setRole] = useState('user'); // 'user' or 'admin'
+  const [role, setRole] = useState('user'); 
 
   function switchAuthModeHandler() {
     setIsLogin(prev => !prev);
@@ -94,13 +94,13 @@ function AuthForm() {
       if (!result.error) {
         alert('Signed in successfully');
 
-        // Fake delay to wait for session to update (if needed)
+        
         setTimeout(() => {
           if (session?.user) {
             cartCtx.setUser(session.user.id, session.user.address, session.user.phone);
           }
 
-          // 🔁 Redirect based on selected role
+  
           if (role === 'admin') {
             router.replace('/admin');
           } else {
@@ -131,7 +131,7 @@ function AuthForm() {
           <input type="email" placeholder="Email" required ref={eref} style={styles.input} />
           <input type="password" placeholder="Password" required ref={pref} style={styles.input} />
 
-          {/* ✅ Role Selection (Admin/User) */}
+    
           <div style={{ marginBottom: '1rem' }}>
             <label style={{ marginRight: '10px' }}>
               <input

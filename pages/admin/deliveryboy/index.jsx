@@ -77,7 +77,7 @@ export default function DeliveryMenAdmin() {
 
       if (res.ok) {
         alert('Delivery boy deleted');
-        fetchData(); // Refresh data
+        fetchData(); 
       } else {
         const data = await res.json();
         alert(data.message || 'Error occurred');

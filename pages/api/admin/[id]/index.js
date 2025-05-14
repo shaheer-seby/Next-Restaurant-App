@@ -1,4 +1,4 @@
-// pages/api/users/[id].js
+
 
 import { ObjectId } from 'mongodb';
 import multer from 'multer';
@@ -9,7 +9,7 @@ import path from 'path';
 
 const saltRounds = 10;
 
-// Multer storage configuration for file uploads
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadDir = 'uploads/users';
@@ -36,19 +36,19 @@ export default async function handler(req, res) {
   const { db } = await connectToDatabase();
   const { id } = req.query;
 
-    // allow localhost:3001 for quick testing
+   
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
   
-    // Handle preflight request
+   
     if (req.method === 'OPTIONS') {
       return res.status(200).end();
     }
 
   if (req.method === 'GET') {
-    // Fetch user by ID
+  
     try {
       const user = await db.collection('users').findOne({ _id: new ObjectId(id) });
       if (!user) {
@@ -59,7 +59,7 @@ export default async function handler(req, res) {
       res.status(500).json({ message: 'Error fetching user', error: error.message });
     }
   } else if (req.method === 'PUT') {
-    // Update user by ID
+    
     upload(req, res, async function (err) {
       if (err) {
         return res.status(500).json({ message: 'File upload error', error: err });
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
       const { name, username, email, phone, position, address, oldPassword, newPassword, thumb } = req.body;
 
       if (oldPassword && newPassword) {
-        // Password update logic
+      
         const user = await db.collection('users').findOne({ email });
         if (user) {
           bcrypt.compare(oldPassword, user.password, async (err, result) => {
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
           res.status(404).json({ message: 'User not found.' });
         }
       } else {
-        // Profile update logic
+      
         const updateData = {
           name,
           username,
@@ -102,7 +102,7 @@ export default async function handler(req, res) {
           const oldThumb = thumb;
           const oldThumbPath = path.join('uploads/users', oldThumb);
           if (fs.existsSync(oldThumbPath)) {
-            fs.unlinkSync(oldThumbPath); // Delete old thumb image
+            fs.unlinkSync(oldThumbPath);
           }
           updateData.thumb = req.file.filename;
         }
@@ -116,7 +116,7 @@ export default async function handler(req, res) {
       }
     });
   } else if (req.method === 'DELETE') {
-    // Delete user by ID
+  
     try {
       const user = await db.collection('users').findOne({ _id: new ObjectId(id) });
       if (!user) {
@@ -125,7 +125,7 @@ export default async function handler(req, res) {
 
       const thumbPath = path.join('uploads/users', user.thumb);
       if (fs.existsSync(thumbPath)) {
-        fs.unlinkSync(thumbPath); // Delete user's thumbnail
+        fs.unlinkSync(thumbPath); 
       }
 
       await db.collection('users').deleteOne({ _id: new ObjectId(id) });

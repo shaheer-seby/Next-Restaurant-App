@@ -1,139 +1,122 @@
-import { useEffect, useState, useContext } from "react";
-import Link from "next/link";
-import Cookies from "js-cookie";
-import Banner from "../../styles/banner/Banner";
-import styles from "../../styles/order.module.css";
-import { CartContext } from "@/store/CartContext"; // If you want to use cart context too
+import { ObjectId } from 'mongodb'; 
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import { connectToDatabase } from '@/lib/db';
 
-const Order = () => {
-  const customer_id = Cookies.get("customer");
-  const customer_name = Cookies.get("customerName");
-
-  const [order, setOrder] = useState(null);
-  const [deliveryCost, setDeliveryCost] = useState(0);
-
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [city, setCity] = useState("");
-  const [address, setAddress] = useState("");
-  const [payment, setPayment] = useState("");
-
-  useEffect(() => {
-    const fetchOrder = async () => {
-      try {
-        // Example: Fetch the most recent order for this customer
-        const res = await fetch(`/api/orders?id=${customer_id}`);
-        const data = await res.json();
-        if (res.ok) {
-          setOrder(data);
-          setPhone(data.phone);
-          setEmail(data.email);
-          setAddress(data.address);
-          setCity(data.city);
-          setPayment(data.payment);
-          setDeliveryCost(data.deliveryCost || (data.city === "Gulberg" ? 80 : 100));
-        } else {
-          console.error("Error fetching order", data.message);
-        }
-      } catch (error) {
-        console.error("Failed to load order:", error);
-      }
-    };
-
-    if (customer_id) {
-      fetchOrder();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = 'uploads/orders'; 
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
-  }, [customer_id]);
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const name = Date.now() + '-' + file.originalname; 
+    cb(null, name);
+  },
+});
 
-  const submitHandler = (e) => {
-    e.preventDefault();
-    alert("Order submitted!");
-  };
+const upload = multer({ storage: storage }).single('thumb');
 
-  const calculateTotal = () => {
-    if (!order) return 0;
-    return order.items.reduce((sum, item) => sum + item.price * item.quantity, 0) + deliveryCost;
-  };
+export default async function handler(req, res) {
+  const { db } = await connectToDatabase();
+  const { id } = req.query; 
 
-  return (
-    <>
-      <Banner title="Order" subtitle="Place Order" />
-      <section className={styles.order}>
-        <div className="container">
-          <div className={styles.orderItems}>
-            {order ? (
-              <table>
-                <thead>
-                  <tr>
-                    <th>Food</th>
-                    <th>Title</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.items.map((item, index) => (
-                    <tr key={index}>
-                      <td><img src={item.thumb || "/foods/sample.jpg"} alt="food" width={50} /></td>
-                      <td>{item.name}</td>
-                      <td>Rs. {item.price}</td>
-                      <td>{item.quantity}</td>
-                      <td>Rs. {item.price * item.quantity}</td>
-                    </tr>
-                  ))}
-                  <tr className="fw-bold">
-                    <td colSpan="4">Sub-Total</td>
-                    <td>Rs. {order.total_price - deliveryCost}</td>
-                  </tr>
-                  <tr className="fw-bold">
-                    <td colSpan="4">Delivery Cost</td>
-                    <td>Rs. {deliveryCost}</td>
-                  </tr>
-                  <tr className="fw-bold">
-                    <td colSpan="4">Total Cost</td>
-                    <td>Rs. {order.total_price}</td>
-                  </tr>
-                  <tr>
-                    <td colSpan="5">
-                      <span className="text-muted">
-                        (Delivery cost Rs 80 for inside Gulberg and Rs 100 for outside)
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            ) : (
-              <p>Loading order...</p>
-            )}
-          </div>
+   
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+   
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
 
-          <form className="px-5 py-3" onSubmit={submitHandler}>
-            <fieldset>
-              <legend>Delivery Details</legend>
+  if (req.method === 'GET') {
+   
+    try {
+      const order = await db.collection('orders').findOne({ _id: new ObjectId(id) });
+      if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+      }
+      res.status(200).json(order);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching order', error: error.message });
+    }
+  } else if (req.method === 'PUT') {
+   
+    upload(req, res, async function (err) {
+      if (err) {
+        return res.status(500).json({ message: 'File upload error', error: err.message });
+      }
 
-              <label className="form-label">Phone Number</label>
-              <input className="form-control mb-2" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+      const { orderID, customer_id, customer_name, items, total_foods, total_quantity, deliveryCost, total_price, email, phone, city, address, payment, oldThumb } = req.body;
 
-              <label className="form-label">Email</label>
-              <input className="form-control mb-2" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      const updateData = {
+        orderID,
+        customer_id,
+        customer_name,
+        items: JSON.parse(items), 
+        total_foods: Number(total_foods),
+        total_quantity: Number(total_quantity),
+        deliveryCost: Number(deliveryCost),
+        total_price: Number(total_price),
+        email,
+        phone,
+        city,
+        address,
+        payment,
+      };
 
-              <label className="form-label">City</label>
-              <input className="form-control mb-2" type="text" value={city} disabled />
+      if (req.file) {
+        const oldThumbPath = path.join('uploads/orders', oldThumb);
+        if (fs.existsSync(oldThumbPath)) {
+          fs.unlinkSync(oldThumbPath); 
+        }
+        updateData.thumb = req.file.filename;
+      }
 
-              <label className="form-label">Address</label>
-              <input className="form-control mb-2" type="text" value={address} onChange={(e) => setAddress(e.target.value)} required />
+      try {
+        const result = await db.collection('orders').updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updateData }
+        );
 
-              <label className="form-label">Payment Method</label><br />
-              <input className="form-control mb-2" type="text" value={payment} disabled />
+        if (!result.matchedCount) {
+          return res.status(404).json({ message: 'Order not found' });
+        }
+        res.status(200).json({ message: 'Order updated successfully' });
+      } catch (error) {
+        res.status(500).json({ message: 'Error updating order', error: error.message });
+      }
+    });
+  } else if (req.method === 'DELETE') {
+ 
+  try {
+    const order = await db.collection('orders').findOne({ _id: new ObjectId(id) });
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
 
-              <button className="btn btn-success" type="submit">Confirm Order</button>
-            </fieldset>
-          </form>
-        </div>
-      </section>
-    </>
-  );
-};
+   
+    if (order.thumb) {
+      const thumbPath = path.join('uploads/orders', order.thumb);
+      if (fs.existsSync(thumbPath)) {
+        fs.unlinkSync(thumbPath);
+      }
+    }
 
-export default Order;
+    await db.collection('orders').deleteOne({ _id: new ObjectId(id) });
+    res.status(200).json({ message: 'Order deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting order', error: error.message });
+  }
+}
+else {
+    
+    res.status(405).json({ message: 'Method Not Allowed' });
+  }
+}

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link"; 
 import Rating from "../../styles/rating/Rating";
 import ReactPaginate from "react-paginate";
-import styles from "../../styles/food.module.css"; // Make sure the path matches your CSS file location
+import styles from "../../styles/food.module.css"; 
 
 const FoodItem = ({ foods }) => {
   const [itemOffset, setItemOffset] = useState(0);

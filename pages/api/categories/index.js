@@ -3,14 +3,13 @@ import multer from 'multer';
 import fs from 'fs';
 import path from 'path';
 
-// Disable Next.js's default body parser
+
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-// Multer setup
 const uploadDir = path.join(process.cwd(), 'public', 'uploads', 'food');
 
 const storage = multer.diskStorage({
@@ -40,7 +39,7 @@ function runMiddleware(req, res, fn) {
 }
 
 export default async function handler(req, res) {
-  // Allow CORS for localhost
+
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

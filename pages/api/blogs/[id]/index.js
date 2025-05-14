@@ -1,8 +1,8 @@
-import { ObjectId } from "mongodb";  // Import ObjectId from mongodb
+import { ObjectId } from "mongodb";  
 import multer from "multer";
 import fs from "fs";
 import path from "path";
-import { connectToDatabase } from "@/lib/db"; // Your DB connection utility
+import { connectToDatabase } from "@/lib/db"; 
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -21,21 +21,21 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
 
-    // allow localhost:3001 for quick testing
+    
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
   
-    // Handle preflight request
+  
     if (req.method === 'OPTIONS') {
       return res.status(200).end();
     }
 
   if (req.method === "GET") {
-    // GET SINGLE BLOG
+
     try {
-      const blog = await db.collection("blogs").findOne({ _id: new ObjectId(id) });  // Use ObjectId here
+      const blog = await db.collection("blogs").findOne({ _id: new ObjectId(id) }); 
       if (!blog) {
         return res.status(404).json({ message: "Blog not found." });
       }
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
         if (oldThumb) {
           try {
             const oldPath = path.join(process.cwd(), "public/uploads/food", oldThumb);
-            fs.unlinkSync(oldPath); // Delete old file
+            fs.unlinkSync(oldPath); 
           } catch (unlinkErr) {
             console.warn("Could not delete old thumbnail:", unlinkErr.message);
           }
@@ -94,7 +94,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ message: "Blog not found." });
     }
 
-    // ✅ Correct the path to the image
+    
     const thumbPath = path.join(process.cwd(), "public", "uploads", "food", blog.thumb);
 
     try {
